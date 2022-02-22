@@ -1,0 +1,44 @@
+<div class="conatiner">
+    <div class="row">
+        <div class="col">
+            <h2>Editar datos del producto</h2>
+            <table class="table">
+                <thead class="col-mb-3">
+                    <th class="mb-3">Nombre producto</th>
+                    <th class="mb-3"> Precio</th>
+                </thead>
+                <tbody>
+                    <form method="get">
+                        {% for e in product %}
+                            <tr>
+                                <td>
+                                    <input type="text" value="{{e.id_producto}}" name="id_producto">
+                                    <input type="text" value="{{e.nombreproducto}}" name="nombreProducto">
+                                </td>
+                                <td>
+                                    <input type="number" value="{{e.precio}}" name="precio">
+
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        <button type="submit" class="btn btn-outline-primary"> Guardar datos</button>
+                    </form>
+                </tbody>
+            </table>
+        </div>
+        <div class="col">
+            <h2>Asignar producto a plaza</h2>
+                    <label for="">Seleccione la plaza</label>
+                    <select name="plaza">
+                        <option value disabled>seleccione la plaza</option>
+                        {% for p in plaza%}
+                        <option name="id_plaza" value="{{p.id_plaza}}">{{p.nombre}}, {{p.ubicacion}} </option>
+                        {% endfor %}
+                    </select>
+                </tbody>
+        </div>
+    </div>
+    
+</div>
+
+

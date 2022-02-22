@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+{% block head  %} Ventas{% endblock %}
+
+{% block content %}
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col">
+                <h2>Lista de productos</h2>
+                <table class=" table">
+                    <thead>
+                        <th>Nombre producto</th>
+                        <th>Cantidad</th>
+                        <th>Precio</th>
+                        <th>Opciones</th>
+                    </thead>
+                    <tbody>
+                        {% for item in items %}
+                        <tr>
+                            <td class="id_producto" hidden>{{item.id_producto}}</td>
+                            <td class="nombre" id="{{item.id_producto}}">{{item.nombreproducto}}</td>
+                            <td class="cantidad">{{item.cantidad}} piezas</td>
+                            <td class="precio">{{item.precio}}</td>
+                            <td><button class="btn btn-primary" id="btn-agregarProducto">Agregar a la venta</button></td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+
+            </div>
+            <div class="col">
+                <h2>Canasta de venta</h2>
+                <form action="Venta" method="post">
+                    {% csrf_token %}
+                    <table class="table">
+                        <thead >
+                            <th> Nombre producto</th>
+                            <th>cantidad</th>
+                            <th>precio</th>
+                        </thead>
+                        <tbody class="tbody">
+                        </tbody>
+                    </table>
+                    <button type="submit" class="btn btn-outline-success">Realizar venta</button>
+                    <label>Total: $</label>
+                    <label for="Total" class="total"> </label>
+                </form>
+            </div>
+
+        </div>
+
+    </div>    
+{% endblock %}
+
+{% block scripts %}
+   
+{% endblock %}
