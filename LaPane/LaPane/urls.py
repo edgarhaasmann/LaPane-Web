@@ -16,6 +16,7 @@ urlpatterns = [
     path('admin/registerProduct', adminview.AddProducto, name='registerProduct'),
     path('admin/editProduct',adminview.editProduct, name='editProduct'),
     path('admin/delProduct', adminview.delProduct, name='delProduct'),
+    path('admin/estadisticas', adminview.statistics, name='statistics'),
     #rutas empleadoPlaza
     path('ventas/RealizarVenta', plazaview.listProductos, name = 'venta'),
     path('ventas/Venta', plazaview.realizarVenta, name = 'realizarVenta'),

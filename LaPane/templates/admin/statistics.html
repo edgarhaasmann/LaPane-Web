@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% block head %}Estadisticas {% endblock %}
+
+{% block content %}
+{% for pm in productos %}
+    <label class="nombreProducto" hidden>{{pm.nombreproducto}}</label>
+{% endfor %}
+{% for vc in Ventas %}
+    <label class="cv" >vc</label>
+{% endfor %}
+
+
+<canvas id="Estadisticas" width="1" height="1">
+
+</canvas>
+
+{% endblock %}

@@ -1,6 +1,6 @@
 from django.shortcuts import redirect, render
 from ..userApp.models import Plazas, Usuarios
-from ..plazaEmpleadoApp.models import Productos
+from ..plazaEmpleadoApp.models import Productos,Ventas
 from django.contrib.auth.hashers import make_password, check_password
 from django.views.generic import ListView, CreateView
 
@@ -69,3 +69,8 @@ def delProduct(request):
         p.delete()
         messages.success(request, 'Producto eliminado')
         return redirect('getProduct')
+
+def statistics(request):
+    p = Productos.objects.all()
+    
+    return render(request, 'admin/statistics.html',{'productos':p} )
