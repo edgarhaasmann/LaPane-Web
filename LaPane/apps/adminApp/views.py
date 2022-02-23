@@ -1,3 +1,4 @@
+from itertools import product
 from django.shortcuts import redirect, render
 from ..userApp.models import Plazas, Usuarios
 from ..plazaEmpleadoApp.models import Productos,Ventas
@@ -71,6 +72,30 @@ def delProduct(request):
         return redirect('getProduct')
 
 def statistics(request):
-    p = Productos.objects.all()
+    data = Ventas.objects.all()
+    productos, ids,votos, pos = [],[],[], 1
+    for i in data:
+        if i.id_producto.nombreproducto in productos:
+            continue
+        productos.append(i.id_producto.nombreproducto)
     
-    return render(request, 'admin/statistics.html',{'productos':p} )
+    for i in data:
+        ids.append(i.id_producto.id_producto)
+    
+    def sumVotos(val):
+        contador = 0
+        for i in range(len(ids)):
+            if ids[i] == val:
+                contador += 1
+        return contador
+    for s in range(len(productos)):
+        if s == 0:
+            val = 1
+            sumVotos(val)
+        else: 
+            val = s + 1
+        votos.append(sumVotos(val))    
+
+    res = dict(zip(productos, votos))
+
+    return render(request, 'admin/statistics.html',{'nombres':productos, 'votos':votos})

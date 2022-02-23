@@ -3,13 +3,13 @@
 {% block head %}Estadisticas {% endblock %}
 
 {% block content %}
-{% for pm in productos %}
-    <label class="nombreProducto" hidden>{{pm.nombreproducto}}</label>
-{% endfor %}
-{% for vc in Ventas %}
-    <label class="cv" >vc</label>
-{% endfor %}
 
+{% for i in nombres %}
+    <label class="nombres" hidden>{{i}},</label>
+{% endfor %}
+{% for i in votos %}
+    <label class="votos" hidden>{{i}},</label>
+{% endfor %}
 
 <canvas id="Estadisticas" width="1" height="1">
 

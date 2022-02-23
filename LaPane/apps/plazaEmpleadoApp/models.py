@@ -1,6 +1,6 @@
 from django.db import models
 from ..userApp.models import *
-
+from datetime import datetime
 
 class Productos(models.Model):
     id_producto = models.AutoField(primary_key=True)
@@ -31,11 +31,11 @@ class Pedidos(models.Model):
 
 class Ventas(models.Model):
     id_venta = models.AutoField(primary_key=True)
-    fventa = models.DateTimeField( auto_now=True , db_column='fVenta')  # Field name made lowercase.
-    valortotal = models.FloatField(db_column='valorTotal')  # Field name made lowercase.
+    fventa = models.DateField( auto_now=True , db_column='fVenta')  # Field name made lowercase.
+    valortotal = models.DecimalField(max_digits=10, decimal_places=2, db_column='valorTotal')  # Field name made lowercase.
     id_producto = models.ForeignKey(Productos, models.DO_NOTHING, db_column='id_producto', blank=True, null=True)
     id_pedido = models.ForeignKey(Pedidos, models.DO_NOTHING, db_column='id_pedido', blank=True, null=True)
 
     class Meta:
-        managed = False
+        managed = True
         db_table = 'ventas'
