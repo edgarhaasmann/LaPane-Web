@@ -9,18 +9,20 @@
                 <table class=" table">
                     <thead>
                         <th>Nombre producto</th>
-                        <th>Cantidad</th>
+                        <th>Existencias disponibles</th>
                         <th>Precio</th>
                         <th>Opciones</th>
                     </thead>
                     <tbody>
                         {% for item in items %}
-                        <tr>
-                            <td class="id_producto" hidden>{{item.id_producto}}</td>
-                            <td class="nombre" id="{{item.id_producto}}">{{item.nombreproducto}}</td>
-                            <td class="cantidad">{{item.cantidad}} piezas</td>
-                            <td class="precio">{{item.precio}}</td>
-                            <td><button class="btn btn-primary" id="btn-agregarProducto">Agregar a la venta</button></td>
+                        <tr class="producto">
+                                <td class="id_producto" hidden>{{item.id_productoPlaza}}</td>
+                                <td class="nombre">{{item.id_producto.nombreproducto}}</td>
+                                <td class="cantidad">{{item.cantidadProductoPlaza}} piezas</td>
+                                <td class="precio">{{item.id_producto.precio}}</td>
+                                <div class="item-details">
+                                    <td><button class="btn btn-primary" id="btn-agregarProducto">Agregar a la venta</button></td>
+                                </div>
                         </tr>
                         {% endfor %}
                     </tbody>
@@ -29,8 +31,8 @@
             </div>
             <div class="col">
                 <h2>Canasta de venta</h2>
-                <form action="Venta" method="post">
-                    {% csrf_token %}
+                <form action="{% url 'realizarVenta' %}" method="post">
+                    
                     <table class="table">
                         <thead >
                             <th> Nombre producto</th>
@@ -38,11 +40,14 @@
                             <th>precio</th>
                         </thead>
                         <tbody class="tbody">
+                          
                         </tbody>
                     </table>
-                    <button type="submit" class="btn btn-outline-success">Realizar venta</button>
-                    <label>Total: $</label>
-                    <label for="Total" class="total"> </label>
+                    <div>
+                        <button type="submit" class="btn btn-outline-success">Realizar venta</button>
+                        <label>Total: $</label>
+                        <label for="Total" id="total"> </label>
+                    </div>
                 </form>
             </div>
 
@@ -51,6 +56,3 @@
     </div>    
 {% endblock %}
 
-{% block scripts %}
-   
-{% endblock %}

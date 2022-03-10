@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+
+{% block head %} Abonar a pedido {% endblock %}
+
+{% block content %}
+    <div class="container">
+        <div class="row">
+            <div class="col">
+                <h2>Abonar a producto</h2>
+                <div class="col">
+                    <div class="col-lg-6 col-mb-6">
+                        {% for a in items %}
+                            <div class="id" hidden>{{a.id_pedido}}</div>
+                            <div class="detail"><label for="cliente">Cliente</label> <p>{{ a.nombrecliente}}</p></div>
+                            <div class="detail"><label for="Descripcion">Descripcion del pedido</label> <p> {{a.descripcionpedido}}</p></div>
+                            <div class="detail"><label for="cliente">Precio</label><p class="precio"> {{a.precio}}</p></div>
+                        {% endfor %}
+                    </div>
+                    <div class="col-lg-12 col-mb-12">
+                        <label for="Abonos">Total de abonos hechos hasta ahora</label>
+                        <p class="total"> {{total}}</p>
+                        <label for="Total">Faltante por abonar</label>
+                        <p>{{faltante}}</p>
+                    </div>
+                    <div class="">
+                        
+                    </div>
+                </div>
+                    <form action="{% url 'editPedido' %}" method="get">
+                        <div class="abonarAPedido">
+                            <input hidden id="id_pedido" type="text" name="id_pedido" >
+                            <div class="form-control">
+                                <input class="form-control" type="number" placeholder="Monto del abono?" name="montoDelPedido">
+                            </div>
+                            <div class="form-control">
+                                <button type="submit" id="enviar" class="form-control btn btn-outline-success ">Aceptar y abobar</button>
+                            </div>
+                        </div>
+                    </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}

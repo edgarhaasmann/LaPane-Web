@@ -1,47 +1,29 @@
+
 $(document).ready(function(){
 let products = $('.nombres').text().split(',')
 let votos = $('.votos').text().split(',')
 let colores = []
+let optColores = ['rgba(139,0,139)', 'rgba(0,0,255)', 'rgba(210,105,30)', 'rgba(105,105,105)', 'rgba(85,107,47)', 'rgba(50,205, 59)']
+let colorRam = 0 
 const random=(min, max)=>{
     return Math.floor(Math.random()*(max- min +1)+min);    
 }
-
-let pos1= random(1,255) , pos2 = random(99,255) , pos3 = random(80,255)  , pos4 = 0.2
 for(let i = 0; i<products.length; i++){
-    
-    console.log(colores.push(`rgba(${pos1}, ${pos2}, ${pos3}, ${pos4})`) in colores) 
+    colores.push(optColores[random(0,5)])    
+
 }
-console.log(colores)
-console.log(products, votos)
 const ctx = document.getElementById('Estadisticas').getContext('2d');
 const myChart = new Chart(ctx, {
     //grafica de pastel 'doughnut'
+    //grafica de barras 'bar'
     type: 'bar',
     data: {
         labels: products,
         datasets: [{
-            label: '# of Votes',
+            label: 'cantidad de ventas',
             data: votos,
-            backgroundColor: colores 
-            // [
-            //     'rgba(255, 99, 132, 0.2)',
-            //     'rgba(54, 162, 235, 0.2)',
-            //     'rgba(255, 206, 86, 0.2)',
-            //     'rgba(75, 192, 192, 0.2)',
-            //     'rgba(153, 102, 255, 0.2)',
-            //     'rgba(255, 159, 64, 0.2)'
-            // ]
-            ,
-            borderColor:colores 
-            // [
-            //     'rgba(255, 99, 132, 1)',
-            //     'rgba(54, 162, 235, 1)',
-            //     'rgba(255, 206, 86, 1)',
-            //     'rgba(75, 192, 192, 1)',
-            //     'rgba(153, 102, 255, 1)',
-            //     'rgba(255, 159, 64, 1)'
-            // ]
-            ,
+            backgroundColor: colores ,
+            borderColor:colores ,
             borderWidth: 1
         }]
     },

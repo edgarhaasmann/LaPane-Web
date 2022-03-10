@@ -3,6 +3,7 @@ from django.urls import path
 from apps.userApp import views as authview
 from apps.adminApp import views as adminview
 from apps.plazaEmpleadoApp import views as plazaview
+pedidos = plazaview.PedidoAbono()
 urlpatterns = [
     #rutas auth 
     path('', authview.auth, name = 'login'),
@@ -20,5 +21,9 @@ urlpatterns = [
     #rutas empleadoPlaza
     path('ventas/RealizarVenta', plazaview.listProductos, name = 'venta'),
     path('ventas/Venta', plazaview.realizarVenta, name = 'realizarVenta'),
+    path('ventas/pedidos', pedidos.pedidosLIst, name='pedidosList'),
+    path('ventas/registrarPedido', pedidos.registrarPedido, name='registrarPedido'),
+    path('ventas/editPedido', pedidos.editPedido, name='editPedido'),
+    path('ventas/delPedido', plazaview.delPedido, name='delPedido'),
     #path('admin/', admin.site.urls),
 ]

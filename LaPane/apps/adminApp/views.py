@@ -1,14 +1,19 @@
-from itertools import product
+#respuestas
 from django.shortcuts import redirect, render
+
+from LaPane.settings import BASE_DIR
+#modelos
 from ..userApp.models import Plazas, Usuarios
 from ..plazaEmpleadoApp.models import Productos,Ventas
+#encryptacion de contraseñas 
 from django.contrib.auth.hashers import make_password, check_password
 from django.views.generic import ListView, CreateView
-
 #libreria para los mensajes 
 from django.contrib import messages
 
 from datetime import datetime
+import os
+
 # Create your views here.
 def index(request):
 
@@ -29,7 +34,7 @@ def registerUser(request):
         # print(''' don't save! ''')
 def delUser(request):
     r = Usuarios.objects.filter(pk = request.GET['delUser'])
-    #r.delete()
+    r.delete()
     messages.success(request, f'El usuario ha sido eliminado exitosamente!')
     return redirect('index')
 
@@ -71,31 +76,42 @@ def delProduct(request):
         messages.success(request, 'Producto eliminado')
         return redirect('getProduct')
 
+def purgVentas(t):
+    model = Ventas.objects.all()
+    date = datetime.today().strftime('%Y-%m-%d')
+    dir = os.path.join(BASE_DIR,'apps/adminApp/ventas')
+    ventas = open(f'{dir}/ventas_de_{date}.txt', 'w')
+    ventas.write('          Nombre del producto| Total | fecha de venta ')
+    for i in model:
+        ventas.write(f'''
+        ----------------------------------------------------------------
+        |{i.id_productoPlaza.id_producto.nombreproducto} | {i.valortotal}    |{i.fventa} \n 
+        ----------------------------------------------------------------
+        ''')
+    ventas.close()
+
 def statistics(request):
+
     data = Ventas.objects.all()
-    productos, ids,votos, pos = [],[],[], 1
-    for i in data:
-        if i.id_producto.nombreproducto in productos:
-            continue
-        productos.append(i.id_producto.nombreproducto)
-    
-    for i in data:
-        ids.append(i.id_producto.id_producto)
-    
-    def sumVotos(val):
-        contador = 0
-        for i in range(len(ids)):
-            if ids[i] == val:
-                contador += 1
-        return contador
-    for s in range(len(productos)):
-        if s == 0:
-            val = 1
-            sumVotos(val)
-        else: 
-            val = s + 1
-        votos.append(sumVotos(val))    
-
-    res = dict(zip(productos, votos))
-
+    productos,votos = [],[]
+    for d in data:
+        if d.id_productoPlaza!=None:
+            if d.id_productoPlaza.id_producto.nombreproducto not in productos:
+                productos.append(d.id_productoPlaza.id_producto.nombreproducto)
+                precio, total = float(d.id_productoPlaza.id_producto.precio),float(d.valortotal)
+                votos.append(total//precio)
+            else:
+                for p in range(len(productos)):
+                    if productos[p] == d.id_productoPlaza.id_producto.nombreproducto:
+                        precio, total = float(d.id_productoPlaza.id_producto.precio),float(d.valortotal)
+                        votos[p] = votos[p] +(total//precio)
+                        
+        if d.id_pedido!=None:
+            if 'productos personalizados' not in productos:
+                productos.insert(0,'productos personalizados')
+                votos.insert(0, d.id_pedido.cantidadproducto)
+            else:
+                votos[0] = int(votos[0] + int(d.id_pedido.cantidadproducto))
     return render(request, 'admin/statistics.html',{'nombres':productos, 'votos':votos})
+
+

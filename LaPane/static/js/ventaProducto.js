@@ -1,37 +1,76 @@
+
+
 $(document).ready(function(){
-   //agregar productos a la venta 
-   $(document).on('click', '#btn-agregarProducto', function(){
-      let contador = 1;
-      let row = $(this).closest('tr')
-      let id = row.find('.nombre').text()
-      let precio = row.find('.precio').text()
-      let data = ''
-      let table = document.querySelector('.tbody')
-      for(let i=0; i<contador;i++){
-         data+=`
-            <tr>
-               <td>${id}</td>
-               <td> <input  class='cantidadP' type='number' placeholder='Cantidad producto' name='cantidad' min='0'> </td>
-               <td class='precioP'> ${precio}</td>
-            </tr>
-         `
-         
-         table.innerHTML = data
-      }
+   const tbody = document.querySelector('.tbody');
+
+   const buttonAdd= document.querySelectorAll('#btn-agregarProducto');
+   buttonAdd.forEach(addVenta=>{
+      addVenta.addEventListener('click', addVentaClicked);
+   });
+   
+   
+   function addVentaClicked(event){
+      const button = event.target;
+      const item =  button.closest('.producto');
+      let itemIdProducto = item.querySelector('.id_producto').textContent;
+      let itemNombreProducto = item.querySelector('.nombre').textContent;
+      let itemCantidadProducto = item.querySelector('.cantidad').textContent.replace('piezas','');
+      let itemPrecioProducto = item.querySelector('.precio').textContent;
+      addCanasta(itemIdProducto, itemNombreProducto, itemPrecioProducto, itemCantidadProducto);
+   }
+   
+   
+   function addCanasta(itemIdProducto, itemNombreProducto, itemPrecioProducto, itemCantidadProducto){
+         const productoEnCanastaFila = document.createElement('tr');
+         productoEnCanastaFila.className = 'item-Producto'
+         const productoEnCanastaItem =  `
+            <td hidden><input class='id' type='text' value='${itemIdProducto}' name='id_producto' hidden></td>
+            <td><div class='nombreP'>${itemNombreProducto} </div></td>
+            <td> <input  class='cantidadP' type='number' value='1' name='cantidad' min='1' max='${parseInt(itemCantidadProducto)}'> </td>
+            <td> <input class='precioP' type='number' value='${itemPrecioProducto}' hidden> ${itemPrecioProducto} </div></td>
+            <td><input type='button' class='btn btn-danger buttonDelete' value='x'></td>
+            <td hidden> <input id='${itemIdProducto}' class='totalP' type='number' name='valorTotal' > </td>
+      `;
+      productoEnCanastaFila.innerHTML = productoEnCanastaItem;
+      tbody.append(productoEnCanastaFila);
       
-   });
-   //total de todos los productos
-   $(document).on('change', '.cantidadP', function(){
-      let row = $(this).closest('tr')
-      let precio = row.find('.precioP').text() 
-      let cantidad = row.find('.cantidadP').val()
-      let total = parseFloat(precio) * parseInt(cantidad)
-      let data = ''
-      let label = document.querySelector('.total')
-      data+=`${total}`
+      productoEnCanastaFila.querySelector('.buttonDelete').addEventListener('click',removeItemDeCanasta);
+      productoEnCanastaFila.querySelector('.cantidadP').addEventListener('change',changeItemCantidad);
+      actualizarTotalGeneral();
+   } 
 
-      label.innerHTML = data
-   });
+   function actualizarTotalGeneral(){
+      let total = 0
+      const totalLabel = document.querySelector('#total');
+      const item = document.querySelectorAll('.item-Producto');
+      item.forEach((i)=>{
+         let precio =  Number(i.querySelector('.precioP').value);
+         let cantidad = Number(i.querySelector('.cantidadP').value);
+         
+         total= total+ precio* cantidad;
+      });
+   totalLabel.innerHTML = `${total.toFixed(2)}`
+   }
+   function removeItemDeCanasta(evt){
+      const buttonDelete = evt.target;
+      buttonDelete.closest('.item-Producto').remove();
+      actualizarTotalGeneral();
+   }
 
+   function changeItemCantidad(evt){
+      let cantidadInput =evt.target;
+      if(cantidadInput.value <= 0){
+         cantidadInput.value = 1;
+      }
+      actualizarTotalGeneral()
+
+   }
+
+
+
+   
+   
 
 });
+
+

@@ -1,18 +1,22 @@
 {% extends 'base.html' %}
-
+{% load static %}
 {% block head %}Estadisticas {% endblock %}
 
 {% block content %}
 
 {% for i in nombres %}
-    <label class="nombres" hidden>{{i}},</label>
+    <label class="nombres" >{{i}},</label>
 {% endfor %}
 {% for i in votos %}
-    <label class="votos" hidden>{{i}},</label>
+    <label class="votos" >{{i}},</label>
 {% endfor %}
 
 <canvas id="Estadisticas" width="1" height="1">
 
 </canvas>
 
+{% endblock %}
+
+{% block scripts %}
+<script src="{% static 'js/statistics.js' %}"></script>
 {% endblock %}
