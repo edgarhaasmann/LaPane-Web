@@ -11,10 +11,9 @@ def listProductos(request):
     return render(request,'plazaEmpleado/ventas.html',{'items':items})
 
 def realizarVenta(request):
-    r=request.POST.keys()
-    print(r)
-    # producto = Productos.objects.filter(id_producto = )
-    return redirect('venta')
+    for items in request.GET.items():
+        print(items)
+        print(items)
 
      
 #funcion para abonar a pedido

@@ -1,3 +1,4 @@
+from unicodedata import name
 from django.contrib import admin
 from django.urls import path
 from apps.userApp import views as authview
@@ -12,6 +13,7 @@ urlpatterns = [
     #rutas admin 
     path('admin/home', adminview.index, name='index'),
     path('admin/register', adminview.registerUser, name='registerUser'),
+    path('admin/editUser', adminview.editUser, name='editUser'),
     path('admin/delUser', adminview.delUser, name='delUser'),
     path('admin/adminInventario', adminview.getInventio, name='getProduct'),
     path('admin/registerProduct', adminview.AddProducto, name='registerProduct'),
