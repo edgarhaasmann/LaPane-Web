@@ -24,13 +24,14 @@ $(document).ready(function(){
          const productoEnCanastaFila = document.createElement('tr');
          productoEnCanastaFila.className = 'item-Producto'
          const productoEnCanastaItem =  `
-            <td hidden><input class='id' type='text' value='${itemIdProducto}' name='id_producto' hidden></td>
+            <td hidden><input class='id' type='text' value='${itemIdProducto}' name='id_producto' ></td>
             <td><div class='nombreP'>${itemNombreProducto} </div></td>
             <td> <input  class='cantidadP' type='number' value='1' name='cantidad' min='1' max='${parseInt(itemCantidadProducto)}'> </td>
             <td> <input class='precioP' type='number' value='${itemPrecioProducto}' hidden> ${itemPrecioProducto} </div></td>
             <td><input type='button' class='btn btn-danger buttonDelete' value='x'></td>
             <td hidden> <input id='${itemIdProducto}' class='totalP' type='number' name='valorTotal' > </td>
       `;
+      
       productoEnCanastaFila.innerHTML = productoEnCanastaItem;
       tbody.append(productoEnCanastaFila);
       
@@ -39,6 +40,14 @@ $(document).ready(function(){
       actualizarTotalGeneral();
    } 
 
+   $(document).on('change', '.cantidadP', function(){
+      let row = $(this).closest('tr')
+      let id = row.find('.id').val()
+      let precio = row.find('.precioP').val() 
+      let cantidad = row.find('.cantidadP').val()
+      let totalProduct = parseFloat(precio)*parseInt(cantidad)
+      let totalP = document.getElementById(id).value =totalProduct 
+   })
    function actualizarTotalGeneral(){
       let total = 0
       const totalLabel = document.querySelector('#total');
