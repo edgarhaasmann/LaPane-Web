@@ -1,5 +1,3 @@
-
-
 $(document).ready(function(){
    const tbody = document.querySelector('.tbody');
 
@@ -16,20 +14,23 @@ $(document).ready(function(){
       let itemNombreProducto = item.querySelector('.nombre').textContent;
       let itemCantidadProducto = item.querySelector('.cantidad').textContent.replace('piezas','');
       let itemPrecioProducto = item.querySelector('.precio').textContent;
-      addCanasta(itemIdProducto, itemNombreProducto, itemPrecioProducto, itemCantidadProducto);
+      let idPlaza = item.querySelector('.id_plaza').textContent;
+      addCanasta(itemIdProducto, itemNombreProducto, itemPrecioProducto, itemCantidadProducto, idPlaza);
    }
    
    
-   function addCanasta(itemIdProducto, itemNombreProducto, itemPrecioProducto, itemCantidadProducto){
+   function addCanasta(itemIdProducto, itemNombreProducto, itemPrecioProducto, itemCantidadProducto, idPlaza){
          const productoEnCanastaFila = document.createElement('tr');
          productoEnCanastaFila.className = 'item-Producto'
          const productoEnCanastaItem =  `
             <td hidden><input class='id' type='text' value='${itemIdProducto}' name='id_producto' ></td>
+            <td hidden><input class='id_plaza' type='text' value='${idPlaza}' name='id_plaza' ></td>
             <td><div class='nombreP'>${itemNombreProducto} </div></td>
-            <td> <input  class='cantidadP' type='number' value='1' name='cantidad' min='1' max='${parseInt(itemCantidadProducto)}'> </td>
+            <td> <input  class='cantidadP' type='number' placeholder='Ingrese cantidad' name='cantidad' min='1' max='${parseInt(itemCantidadProducto)}'> </td>
             <td> <input class='precioP' type='number' value='${itemPrecioProducto}' hidden> ${itemPrecioProducto} </div></td>
             <td><input type='button' class='btn btn-danger buttonDelete' value='x'></td>
-            <td hidden> <input id='${itemIdProducto}' class='totalP' type='number' name='valorTotal' > </td>
+            <td><input hidden type='text' id='Product${itemIdProducto}' class='totlp' > </td>
+
       `;
       
       productoEnCanastaFila.innerHTML = productoEnCanastaItem;
@@ -37,19 +38,52 @@ $(document).ready(function(){
       
       productoEnCanastaFila.querySelector('.buttonDelete').addEventListener('click',removeItemDeCanasta);
       productoEnCanastaFila.querySelector('.cantidadP').addEventListener('change',changeItemCantidad);
+      
       actualizarTotalGeneral();
+   
+      
+      
+      
    } 
-
    $(document).on('change', '.cantidadP', function(){
-      let row = $(this).closest('tr')
-      let id = row.find('.id').val()
-      let precio = row.find('.precioP').val() 
-      let cantidad = row.find('.cantidadP').val()
-      let totalProduct = parseFloat(precio)*parseInt(cantidad)
-      let totalP = document.getElementById(id).value =totalProduct 
-   })
+      let row = $(this).closest('tr');
+      let id = row.find('.id').val();
+      let precio = row.find('.precioP').val(); 
+      let cantidad = row.find('.cantidadP').val();
+      let totalProduct = parseFloat(precio)*parseInt(cantidad);
+      let totalP = document.getElementById(`Product${id}`).value =totalProduct; 
+   });
+   
+   $(document).on('click','#btn-vender', function(){
+      const item = document.querySelectorAll('.item-Producto');
+      item.forEach((i)=>{
+         let id_producto = i.querySelector('.id').value;
+         let total_producto = i.querySelector('.totlp').value;
+         let id_plaza = i.querySelector('.id_plaza').value;
+         let cantidad = i.querySelector('.cantidadP').value;
+
+         $.ajax({
+            url:'Venta',
+            type:'GET',
+            data:{
+               id_producto,
+               total_producto,
+               id_plaza,
+               cantidad
+            },
+            dataType:'json',
+            success:function(data){
+               let message = data.content.message;
+               location.reload( );
+            }
+         });
+      });
+   });
+   
+   
+   
    function actualizarTotalGeneral(){
-      let total = 0
+      let total = 0;
       const totalLabel = document.querySelector('#total');
       const item = document.querySelectorAll('.item-Producto');
       item.forEach((i)=>{
@@ -58,7 +92,7 @@ $(document).ready(function(){
          
          total= total+ precio* cantidad;
       });
-   totalLabel.innerHTML = `${total.toFixed(2)}`
+   totalLabel.innerHTML = `${total.toFixed(2)}`;
    }
    function removeItemDeCanasta(evt){
       const buttonDelete = evt.target;
@@ -81,5 +115,6 @@ $(document).ready(function(){
    
 
 });
+
 
 

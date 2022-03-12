@@ -1,5 +1,7 @@
 
+from django.http import JsonResponse
 from django.shortcuts import redirect, render
+from ..adminApp.models import Empleados
 from ..userApp.models import Plazas
 from .models import ProductosPlaza, Ventas, Pedidos, Abonos
 from django.contrib import messages
@@ -11,9 +13,23 @@ def listProductos(request):
     return render(request,'plazaEmpleado/ventas.html',{'items':items})
 
 def realizarVenta(request):
-    for items in request.GET.items():
-        print(items)
-        print(items)
+    venta = Ventas()
+    venta.valortotal = request.GET['total_producto']
+    venta.id_productoPlaza = ProductosPlaza.objects.get(pk = request.GET['id_producto'])
+    venta.save()
+    productosplaza = ProductosPlaza.objects.filter(pk = request.GET['id_producto'])
+    if productosplaza:
+        for pplz in productosplaza:
+            pplz.cantidadProductoPlaza = int(pplz.cantidadProductoPlaza) - int(request.GET['cantidad'])
+            pplz.save()
+    messages.success(request, 'producto vendido')
+    return JsonResponse(
+        {
+            'content':{
+                'message':'Producto vendido'
+            }
+        }
+    )
 
      
 #funcion para abonar a pedido

@@ -17,6 +17,7 @@
                         {% for item in items %}
                         <tr class="producto">
                                 <td class="id_producto" hidden>{{item.id_productoPlaza}}</td>
+                                <td class="id_plaza" hidden>{{item.id_plaza.id_plaza}}</td>
                                 <td class="nombre">{{item.id_producto.nombreproducto}}</td>
                                 <td class="cantidad">{{item.cantidadProductoPlaza}} piezas</td>
                                 <td class="precio">{{item.id_producto.precio}}</td>
@@ -31,7 +32,7 @@
             </div>
             <div class="col">
                 <h2>Canasta de venta</h2>
-                <form action="{% url 'realizarVenta' %}" method="get">
+                <form>
                     <table class="table">
                         <thead >
                             <th> Nombre producto</th>
@@ -43,7 +44,7 @@
                         </tbody>
                     </table>
                     <div>
-                        <button type="submit" class="btn btn-outline-success">Realizar venta</button>
+                        <button type="button" id="btn-vender" class="btn btn-outline-success">Realizar venta</button>
                         <label>Total: $</label>
                         <label for="Total" id="total"> </label>
                     </div>
