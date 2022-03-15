@@ -5,6 +5,7 @@ from apps.userApp import views as authview
 from apps.adminApp import views as adminview
 from apps.plazaEmpleadoApp import views as plazaview
 pedidos = plazaview.PedidoAbono()
+inventario = adminview.Inventario()
 urlpatterns = [
     #rutas auth 
     path('', authview.auth, name = 'login'),
@@ -15,9 +16,11 @@ urlpatterns = [
     path('admin/register', adminview.registerUser, name='registerUser'),
     path('admin/editUser', adminview.editUser, name='editUser'),
     path('admin/delUser', adminview.delUser, name='delUser'),
-    path('admin/adminInventario', adminview.getInventio, name='getProduct'),
-    path('admin/registerProduct', adminview.AddProducto, name='registerProduct'),
-    path('admin/editProduct',adminview.editProduct, name='editProduct'),
+    
+    
+    path('admin/adminInventario', inventario.getInventio, name='getProduct'),
+    path('admin/registerProduct', inventario.AddProducto, name='registerProduct'),
+    path('admin/editProduct',inventario.editProduct, name='editProduct'),
     path('admin/delProduct', adminview.delProduct, name='delProduct'),
     path('admin/estadisticas', adminview.statistics, name='statistics'),
     #rutas empleadoPlaza

@@ -52,59 +52,72 @@ def delUser(request):
     messages.success(request, f'El usuario ha sido eliminado exitosamente!')
     return redirect('index')
 
-def getInventio(request):
-    products = Productos.objects.all()
-    return render(request, 'admin/adminInventario.html', {'products':products})
+class Inventario:
+    def __init__(self):
+        self.productos = Productos()
+        self.productosplaza = ProductosPlaza()
+        self.plaza = Plazas()
 
-def AddProducto(request):
-    if request.POST.get('nombreProducto') == '' and request.POST.get('cantidad') =='' and request.POST.get('precio') == '':
-      messages.warning('Todos los campos deben de estar llenos!')
-    else:
-        Productos(nombreproducto = request.POST.get('nombreProducto'), cantidad= request.POST.get('cantidad'), precio = request.POST.get('precio')).save()
-        messages.success(request, 'Producto registrado')
-    return redirect('getProduct')
-    
-def editProduct(request):
-    if request.GET.get('id'):
-        p = Productos.objects.filter(pk = request.GET['id'])
-        plza = Plazas.objects.all()
-        return render(request,'admin/modalEditProduct.html',{'product':p, 'plaza':plza})
-    elif request.GET.get('plaza'):
-        producto = Productos.objects.filter(pk = request.GET['id_producto'])
-        for p in producto:
-            if p.cantidad <  int(request.GET['cantidad']):
-                messages.error(request, 'La cantidad supera las existencias')
-            else: 
-                productoPlaza = ProductosPlaza.objects.filter(id_producto = request.GET['id_producto'] )
-                if productoPlaza:
-                    for pplz in productoPlaza:
-                        pplz.cantidadProductoPlaza = pplz.cantidadProductoPlaza + int(request.GET['cantidad'])
-                        pplz.save()
-                    for p in producto:
-                            p.cantidad = p.cantidad - int(request.GET['cantidad'])
-                            p.save()
-                else:
-                    pPlaza = ProductosPlaza()
-                    pPlaza.cantidadProductoPlaza = request.GET['cantidad']
-                    pPlaza.id_producto = Productos.objects.get(pk = request.GET['id_producto'])
-                    pPlaza.id_plaza = Plazas.objects.get(pk = request.GET['plaza'])
-                    pPlaza.save()
-                    for p in producto:
-                        p.cantidad = p.cantidad - int(request.GET['cantidad'])
-                        p.save()
-                messages.success(request, 'Producto registrado en la plaza')
-    else: 
-        p = Productos.objects.get(pk = request.GET.get('id_producto'))
-        print(type(p.cantidad), type(request.GET.get('cantidad')))
-        if p.nombreproducto != request.GET.get('nombreProducto') or p.precio != float(request.GET.get('precio')) or p.cantidad!= int(request.GET['cantidad']):
-            p.nombreproducto = request.GET['nombreProducto']
-            p.cantidad = p.cantidad + int(request.GET['cantidad'])
-            p.precio = request.GET['precio']
-            p.save()
-            messages.success(request, 'Producto actualizado')
+    def getInventio(self, request):
+        products = Productos.objects.all()
+        return render(request, 'admin/adminInventario.html', {'products':products})
+    #metodo para registrar nuevo producto
+    def AddProducto(self, request):
+        if request.POST.get('nombreProducto') == '' and request.POST.get('cantidad') =='' and request.POST.get('precio') == '':
+            messages.warning('Todos los campos deben de estar llenos!')
         else:
-            messages.error(request,'No se reconocieron cambios')
-    return redirect('getProduct')
+            Productos(nombreproducto = request.POST.get('nombreProducto'), cantidad= request.POST.get('cantidad'), precio = request.POST.get('precio')).save()
+            messages.success(request, 'Producto registrado')
+        return redirect('getProduct')
+    #metodo para editar producto
+    def editProduct(self, request):
+        if request.GET.get('id'):
+                p = Productos.objects.filter(pk = request.GET['id'])
+                plza = Plazas.objects.all()
+                return render(request,'admin/modalEditProduct.html',{'product':p, 'plaza':plza})
+        #actualizar datos del producto
+        elif request.GET.get('id_producto'):
+            producto = Productos.objects.get(pk = request.GET['id_producto'])            
+            if request.GET['cantidad']!='':
+               producto.cantidad = int(producto.cantidad) + int(request.GET['cantidad'])
+               producto.save()
+               messages.success(request, 'Cantidad del producto agregada exitosamente')
+                    
+            elif request.GET['nombreProducto'] or request.GET['precio']:
+                if  producto.nombreproducto != request.GET['nombreProducto'] or producto.precio!= float(request.GET['precio']):
+                    producto.nombreproducto = request.GET['nombreProducto']
+                    producto.precio = request.GET['precio']
+                    messages.success(request, 'Producto actualizado exitosamente')
+                    producto.save()
+                else:
+                    messages.warning(request, 'No se recocieron cambios')
+            return redirect('getProduct')
+        #asignar producto a plaza
+        else:
+            productoPlaza = ProductosPlaza.objects.filter(id_plaza = request.GET['plaza']).filter(id_producto =request.GET['id_productoAdd'])
+            product = Productos.objects.filter(pk = request.GET['id_productoAdd'])
+            for p in product:
+                p.cantidad = p.cantidad - int(request.GET['cantidad'])
+                p.save()
+            if productoPlaza:
+                for pplz in productoPlaza:
+                    pplz.cantidadProductoPlaza = pplz.cantidadProductoPlaza + int(request.GET['cantidad'])
+                    pplz.id_producto = Productos.objects.get(pk = request.GET['id_productoAdd'])
+                    pplz.id_plaza = Plazas.objects.get(pk = request.GET['plaza'])
+                    pplz.save()
+                   
+                messages.success(request, 'cantidad agregada en la plaza')
+            else:
+                self.productosplaza.id_producto =  Productos.objects.get(pk = request.GET['id_productoAdd'])
+                self.productosplaza.cantidadProductoPlaza =  int(request.GET['cantidad'])
+                self.productosplaza.id_plaza = Plazas.objects.get(pk = request.GET['plaza'])
+                self.productosplaza.save()
+                
+
+                messages.success(request, 'Producto agregado en la plaza')
+            return redirect('getProduct')
+
+        
 def delProduct(request):
     if request.method =='GET' and request.GET:
         p = Productos.objects.filter(pk = request.GET['delProduct'])

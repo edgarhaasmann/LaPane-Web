@@ -5,7 +5,7 @@ from ..adminApp.models import Empleados
 from ..userApp.models import Plazas
 from .models import ProductosPlaza, Ventas, Pedidos, Abonos
 from django.contrib import messages
-from django.views.generic import CreateView
+
 # Create your views here.
 
 def listProductos(request):

@@ -34,7 +34,7 @@
                                     <td>{{p.descripcionpedido}} </td>
                                     <td>{{p.precio}}</td>
                                     <td>{{p.cantidadproducto}}</td>
-                                    <td><form action="{% url 'editPedido' %}" method="get"><input hidden type="text" value="{{p.id_pedido}}" name="id_Edit"> <button class="btn btn-primary" type="submit">Abonar a producto</button></form> 
+                                    <td><form action="{% url 'editPedido' %}" method="get"><input hidden type="text" value="{{p.id_pedido}}" name="id_Edit"> <button class="btn btn-primary"  type="submit">Abonar a producto</button></form> 
                                         <form action="{% url 'delPedido' %}" method="get"><input hidden type="text" value="{{p.id_pedido}}" name="id_Del"> <button class="btn btn-danger">Cancerlar el pedido</button> </form></td>
                                 </tr>
                             {% endif %}

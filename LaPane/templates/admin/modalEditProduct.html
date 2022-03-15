@@ -1,56 +1,57 @@
+{% extends 'base.html' %}
+
+{% block head %} Editar producto {% endblock %}
+
+{% block content %}
 <div class="conatiner">
     <div class="row">
         <div class="col">
             <h2>Editar datos del producto</h2>
-            <table class="table">
-                <thead class="col-mb-3">
-                    <th class="mb-3">Nombre producto</th>
-                    <th class="mb-3">Cantidad disponible</th>
-                    <th class="mb-3"> Precio</th>
-                </thead>
-                <tbody>
-                    <form method="get">
-                        {% for e in product %}
-                            <tr>
-                                <td>
-                                    <input type="text" value="{{e.id_producto}}" name="id_producto" hidden>
-                                    <input type="text" value="{{e.nombreproducto}}" name="nombreProducto">
-                                </td>
-                                <td>
+            <form method="get">
+                {% for e in product %} 
+                    <label for="nombreProducto">Nombre producto</label>
+                        <p>  
+                            <input type="text" value="{{e.id_producto}}" name="id_producto" hidden>
+                            <input class="form-control" type="text" value="{{e.nombreproducto}}" name="nombreProducto">
 
-                                    <input type="number" name="cantidad" placeholder="Agregar mas existencias?">
-                                </td>
-                                <td>
-                                    <input type="number" value="{{e.precio}}" name="precio">
-
-                                </td>
-                            </tr>
-                        {% endfor %}
-                        <button type="submit" class="btn btn-outline-primary"> Guardar datos</button>
-                    </form>
-                </tbody>
-            </table>
+                        </p>
+                    <label for="cantidadProducto">Agregar cantidad</label>
+                        <p>  
+                            <input class="form-control" type="number" name="cantidad" placeholder="Agregar mas existencias?">
+                        </p>
+                    <label for="precioProducto">Precio establecido</label>
+                        <p class="mb-3">
+                            <input class="form-control" type="number" value="{{e.precio}}" name="precio">
+                        </p>
+                    
+                        <button type="submit" class="form-control btn btn-outline-primary"> Guardar datos</button>
+                {% endfor %}
+            </form>
         </div>
         <div class="col">
             <h2>Asignar producto a plaza</h2>
             <form method="get">
 
                     {% for e in product %}
-                   <div class="mb-3">
-                       <input class="form-control" type="text" value="{{e.id_producto}}" name="id_producto" hidden>
-                   </div>
-                   <div class="mb-3">
-                        <input type="number" name="cantidad" placeholder="cantiad producto">
+                    <div class="mb-3">
+                        <label for="">Cantidad de producto a asignar</label>
+                        <p>
+                            <input class="form-control" type="text" value="{{e.id_producto}}" name="id_productoAdd" hidden>
+                            <input type="number" name="cantidad" placeholder="cantiad producto">
+                        </p>
                    </div>
                     {% endfor %}
                     <div class="mb-3">
                         <label for="">Seleccione la plaza</label>
-                        <select name="plaza">
-                            <option value disabled>seleccione la plaza</option>
-                            {% for p in plaza%}
-                            <option name="id_plaza" value="{{p.id_plaza}}">{{p.nombre}}, {{p.ubicacion}} </option>
-                            {% endfor %}
-                        </select>
+                        <p>
+
+                            <select name="plaza">
+                                <option value disabled>seleccione la plaza</option>
+                                {% for p in plaza%}
+                                <option name="id_plaza" value="{{p.id_plaza}}">{{p.nombre}}, {{p.ubicacion}} </option>
+                                {% endfor %}
+                            </select>
+                        </p>
                     </div>
                     <button type="submit">Agregar producto a plaza</button>
             </form>
@@ -59,5 +60,4 @@
     </div>
     
 </div>
-
-
+{% endblock %}

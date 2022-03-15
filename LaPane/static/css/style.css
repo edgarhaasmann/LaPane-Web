@@ -9,3 +9,6 @@ div.card{
     background-color: rgba(197, 197, 197, 0.63);
 }
 
+#tablaConScroll{
+    overflow: scroll;
+}
