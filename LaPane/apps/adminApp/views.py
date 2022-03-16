@@ -5,7 +5,7 @@ from LaPane.settings import BASE_DIR
 #modelos
 from ..userApp.models import Plazas, Usuarios
 from ..plazaEmpleadoApp.models import Productos,Ventas, ProductosPlaza
-from .models import Empleados
+from .models import Empleados, Roles
 #encryptacion de contraseñas 
 from django.contrib.auth.hashers import make_password, check_password
 from django.views.generic import ListView, CreateView
@@ -17,7 +17,6 @@ import os
 
 # Create your views here.
 def index(request):
-
     user = Usuarios.objects.all()
     return render(request, 'admin/agregar.html', {'data':user})
 
@@ -37,14 +36,36 @@ def editUser(request):
     # return render(request,'admin/modalEditUser.html')
     if request.GET.get('id_empleado'):
         data = Usuarios.objects.filter(pk = request.GET.get('id_empleado'))
+        dataUser = Empleados.objects.filter(id_usuario = request.GET.get('id_empleado'))
         plz = Plazas.objects.all()
-        return render(request,'admin/modalEditUser.html',{'data':data, 'plz':plz})
+        rol = Roles.objects.all()
+        return render(request,'admin/modalEditUser.html',{'data':data,'dataUser':dataUser, 'plz':plz, 'rol':rol})
     else:
-        empleados = Empleados()
-        empleados.id_usuario = Usuarios.objects.get(pk=request.GET['empleado'])
-        empleados.id_plaza = Plazas.objects.get(pk = request.GET['plaza'])
-        empleados.save()
-        messages.success(request, 'El empleado ha sido registrado en la plaza exitosamente!')
+        usuario = Empleados.objects.filter(id_usuario = request.GET['empleado'])
+        if usuario:
+            for u in usuario:
+                if not request.GET.get('plaza') and not  request.GET.get('rol'):
+                    messages.error(request, 'seleccione la opcion que desee, no se han hecho cambios')
+                elif request.GET.get('plaza') or request.GET.get('rol'):
+                    if not request.GET.get('plaza'):
+                        u.id_rol = Roles.objects.get(pk = request.GET['rol'])    
+                        messages.success(request, 'Rol cambiado exitosamente!')
+                    elif not request.GET.get('rol'):
+                        u.id_plaza = Plazas.objects.get(pk = request.GET['plaza'])
+                        messages.success(request, 'Usuario reubicado en la plaza exitosamente!')
+                    else:
+                        u.id_rol = Roles.objects.get(pk = request.GET['rol'])    
+                        u.id_plaza = Plazas.objects.get(pk = request.GET['plaza'])
+                        messages.success(request, 'datos cambiados ')
+                    
+                    u.save()
+        else:
+            empleados = Empleados()
+            empleados.id_usuario = Usuarios.objects.get(pk=request.GET['empleado'])
+            empleados.id_plaza = Plazas.objects.get(pk = request.GET['plaza'])
+            empleados.id_rol = Roles.objects.get(pk = request.GET['rol'])
+            empleados.save()
+            messages.success(request, 'El empleado ha sido registrado en la plaza exitosamente!')
     return redirect('index')
 def delUser(request):
     r = Usuarios.objects.filter(pk = request.GET['delUser'])
@@ -116,14 +137,13 @@ class Inventario:
 
                 messages.success(request, 'Producto agregado en la plaza')
             return redirect('getProduct')
-
-        
-def delProduct(request):
-    if request.method =='GET' and request.GET:
-        p = Productos.objects.filter(pk = request.GET['delProduct'])
-        p.delete()
-        messages.success(request, 'Producto eliminado')
-        return redirect('getProduct')
+    #metodo para eliminar producto     
+    def delProduct(self, request):
+        if request.method =='GET' and request.GET:
+            p = Productos.objects.filter(pk = request.GET['delProduct'])
+            p.delete()
+            messages.success(request, 'Producto eliminado')
+            return redirect('getProduct')
 
 def purgVentas(t):
     model = Ventas.objects.all()

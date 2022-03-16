@@ -1,8 +1,20 @@
+
+
 {% if messages %}
 {% for message in messages%}
-    <div class="alert {% if message.tags == 'success'%} alert-success {% elif message.tags == 'warning'%} alert-warning {%else%} alert-danger {%endif%}"> <!--segunda forma de condicionar mensajes y clases-->
-        <button class="float-end btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    <div class="alert {% if message.tags == 'success'%} alert-success {% elif message.tags == 'warning'%} alert-warning {%else%} alert-danger {%endif%}" id="mensajes"> <!--segunda forma de condicionar mensajes y clases-->
+        <button class="float-end btn-close"  aria-label="Close" id="ocultar"></button>
         {{message}}
     </div>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+    <script>
+        $(document).ready(function(){
+            $('#mensajes').slideUp(1000);
+            $('#mensajes').show(2000)
+        });
+        $(document).on('click','#ocultar', function(){
+            $('#mensajes').hide(1000);
+        });
+    </script>
 {% endfor %}
 {% endif %}

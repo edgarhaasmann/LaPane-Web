@@ -60,14 +60,5 @@ class Plazas(models.Model):
         return self.nombre
 
 
-class Roles(models.Model):
-    id_rol = models.AutoField(primary_key=True)
-    tiporol = models.CharField(db_column='tipoRol', max_length=8)  # Field name made lowercase.
-    id_usuario = models.ForeignKey('Usuarios', models.DO_NOTHING, db_column='id_usuario', blank=True, null=True)
-
-    class Meta:
-        managed = False
-        db_table = 'roles'
-
 
 

@@ -21,7 +21,7 @@ urlpatterns = [
     path('admin/adminInventario', inventario.getInventio, name='getProduct'),
     path('admin/registerProduct', inventario.AddProducto, name='registerProduct'),
     path('admin/editProduct',inventario.editProduct, name='editProduct'),
-    path('admin/delProduct', adminview.delProduct, name='delProduct'),
+    path('admin/delProduct', inventario.delProduct, name='delProduct'),
     path('admin/estadisticas', adminview.statistics, name='statistics'),
     #rutas empleadoPlaza
     path('ventas/RealizarVenta', plazaview.listProductos, name = 'venta'),

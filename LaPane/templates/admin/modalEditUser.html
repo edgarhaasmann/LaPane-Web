@@ -1,23 +1,71 @@
+{% extends 'base.html' %}
+
+{% block head %} Editar usuario {% endblock %}
+
+
+{% block content %}
 <div class="container">
-    <div class="row">
         <div class="row">
+            <div class="col">
             <form method="get">
-                {% for d in data %}
-                    <input type="text" value="{{d.id_usuario}}" name="empleado" hidden>
-                    <label for="d">Datos del empleado</label>
-                    <p>  
-                        <input type="text" value="{{d.nombre}} {{d.appaterno}} {{d.apmaterno}}" disabled>
-                    </p>
-                    <label for="plaza">Asignar a una plaza? Plazas disponibles</label>
-                    <select name="plaza">
-                        <option value disabled>seleccione la plaza</option>
-                        {% for p in plz%}
-                        <option name="id_plaza" value="{{p.id_plaza}}">{{p.nombre}}, {{p.ubicacion}} </option>
+                    {% for d in data %}
+                        <input type="text" value="{{d.id_usuario}}" name="empleado" hidden>
+                        <h2 class="text-info">Datos del empleado</h2>
+                        <label >Nombre del empleado:</label>
+                        <p>  
+                            <input type="text" value="{{d.nombre}} {{d.appaterno}} {{d.apmaterno}}" disabled>
+                        </p>
+                    {% endfor %}
+                    
+                    {%if dataUser%}
+                        {% for dU in dataUser %}
+                            <label > El empleado esta asignado a: </label>
+                            <p class="text-success">
+                                {{dU.id_plaza.nombre}}, {{dU.id_plaza.ubicacion}}. 
+                            </p>
+                            <label >Tiene el rol de:</label>
+                            <p class="text-success">
+                                {{dU.id_rol.tipoRol}}.
+                            </p>
                         {% endfor %}
-                    </select>    
-                    <button type="submit" class="btn btn-primary">Registrar al empleado en la plaza</button>
-                {% endfor %}
+                    {% else %}
+                            <label for="noData"> El usuario no tiene registro!</label>
+                    {% endif %}
+
+                </div>
+                <div class="col">
+                    <h2 class="text-info">Opciones</h2>
+                    <label for="plaza">Asignar a una plaza? Plazas disponibles!</label>
+                    <p>
+
+                        <select name="plaza" required>
+                            <option disabled selected>seleccione la plaza</option>
+                            {% for p in plz%}
+                            <option value="{{p.id_plaza}}">{{p.nombre}}, {{p.ubicacion}} </option>
+                            {% endfor %}
+                        </select>  
+                    </p>
+                    <div class="mb-3">
+                        <label for="rol">Dar le un rol? Roles registrados!</label>
+                        <p>
+                            <select name="rol" required>
+                                <option disabled selected> Selececcione el rol del usuario</option>
+                               {% for r in rol %}
+                                    <option value="{{r.id_rol}}" >{{r.tipoRol}}</option>
+                               {% endfor %}
+                            </select>
+                        </p>
+                    </div>
+                    
+                </div>
+                <div class="col-lg-12 col-mb-12">
+                    <center>
+                        <button type="submit" class="btn btn-primary">Registrar al empleado en la plaza</button>
+                    </center>
+                </div>
             </form>
         </div>
-    </div>
+
 </div>
+
+{% endblock %}

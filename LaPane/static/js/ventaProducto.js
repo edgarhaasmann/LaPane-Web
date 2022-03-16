@@ -103,7 +103,7 @@ $(document).ready(function(){
    function changeItemCantidad(evt){
       let cantidadInput =evt.target;
       if(cantidadInput.value <= 0){
-         cantidadInput.value = 1;
+         cantidadInput.value = 0;
       }
       actualizarTotalGeneral()
 
