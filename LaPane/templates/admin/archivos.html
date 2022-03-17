@@ -1,0 +1,57 @@
+{% extends 'base.html'%}
+
+{% block head %}Archivos{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <h2 class="text-warning">Las acciones aqui afectaran las ventas hechas y/o los archivos existentes!</h2>
+        <div class="col">
+            <h2 class="text-danger">Registro y purga de ventas</h2>
+            <p>
+            
+                <h2 class="text-danger">Desea descargar algun archivo ? Archivos disponibles</h2>
+                    <form action="{% url 'purga' %}" method="post">
+                    {%csrf_token%}
+                        <select name="archivo">
+                        
+                            <option selected disabled>Seleccione el archivo que desee descargar</option>
+                        {% for c in carpeta %}
+                            <option value="{{c}}">{{c}}</option>
+                        {% endfor %}
+                        </select>
+                        <button class="btn btn-danger" type="submit" title="Esta accion almacenara todos los datos en un archivo .doc el cual se descargara automaticamente y eliminara todas las ventas existentes!">Descargar</button>
+                    </form>
+            </p>
+        </div>
+        <div class="col">
+            <h2 class="text-danger">Desea eliminar algun archivo?</h2>
+            <form action="{% url 'purga' %}" method="post">
+                {%csrf_token%}
+                    <select name="archivoDel">
+                    
+                    <option selected disabled>Seleccione el archivo que desee eliminar</option>
+                    {% for c in carpeta %}
+                        <option value="{{c}}">{{c}}</option>
+                        {% endfor %}
+                    </select>
+                    <p><button class="btn btn-danger" type="submit" title="Esta accion eliminara algun archivo seleccionado existente!">eliminar archivo</button></p>
+                    
+                </form>
+                
+        </div>
+        <div class="col-lg-12">
+            <center>
+                    <form action="{% url 'purga' %}" method="post">
+                        {%csrf_token%}
+                        <input type="text" value="todo" name="todo" hidden>
+                        <button class="btn btn-danger" type="submit" title="Esta accion eliminara todos los archivos existentes">Eliminar todos los archivos</button>
+                    </form>
+    
+            </center>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+

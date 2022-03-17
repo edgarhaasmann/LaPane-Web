@@ -1,10 +1,12 @@
 #respuestas
+from urllib import response
+from django.http import HttpResponse
 from django.shortcuts import redirect, render
 
 from LaPane.settings import BASE_DIR
 #modelos
 from ..userApp.models import Plazas, Usuarios
-from ..plazaEmpleadoApp.models import Productos,Ventas, ProductosPlaza
+from ..plazaEmpleadoApp.models import Pedidos, Productos,Ventas, ProductosPlaza
 from .models import Empleados, Roles
 #encryptacion de contraseñas 
 from django.contrib.auth.hashers import make_password, check_password
@@ -23,14 +25,17 @@ def index(request):
 def registerUser(request):
     date= datetime.now()
     print(date)
-    try:
-        r = Usuarios(nombre=request.POST.get('nombre'), appaterno=request.POST.get('appaterno'),apmaterno = request.POST.get('apmaterno'), fnaciemiento = request.POST.get('fNacimiento'),user= request.POST.get('user'),password= make_password(request.POST.get('password'))).save()
+    # try:
+    if request.POST['password'] == request.POST['password2']:
+        r = Usuarios(nombre=request.POST.get('nombre'), appaterno=request.POST.get('appaterno'),apmaterno = request.POST.get('apmaterno'), fnaciemiento = request.POST.get('fNacimiento'),user= request.POST.get('user'),password= make_password(request.POST.get('password'), None)).save()
         messages.success(request, 'Usuario registrado exitosamente!')
         # print('save!')
-        return redirect('index')
-    except:
-        messages.error(request, 'Algo ha salido mal y no se pudo registrar el usuario')
-        return redirect('index')
+    else:
+        messages.error(request, 'Las contraseñas no coinciden')
+    return redirect('index')
+    # except:
+    #     messages.error(request, 'Algo ha salido mal y no se pudo registrar el usuario')
+    #     return redirect('index')
         # print(''' don't save! ''')
 def editUser(request):
     # return render(request,'admin/modalEditUser.html')
@@ -145,19 +150,69 @@ class Inventario:
             messages.success(request, 'Producto eliminado')
             return redirect('getProduct')
 
-def purgVentas(t):
+def purgVentas(request):
     model = Ventas.objects.all()
     date = datetime.today().strftime('%Y-%m-%d')
     dir = os.path.join(BASE_DIR,'apps/adminApp/ventas')
-    ventas = open(f'{dir}/ventas_de_{date}.txt', 'w')
-    ventas.write('          Nombre del producto| Total | fecha de venta ')
-    for i in model:
-        ventas.write(f'''
-        ----------------------------------------------------------------
-        |{i.id_productoPlaza.id_producto.nombreproducto} | {i.valortotal}    |{i.fventa} \n 
-        ----------------------------------------------------------------
-        ''')
-    ventas.close()
+    try:
+        ventas = open(f'{dir}/ventas_de_{date}.doc', 'w')
+        ventas.write('''Ventas plaza\n
+        \n'
+
+                    ''')
+        for i in model:
+            if i.id_productoPlaza!=None:
+                cantidad = float(i.valortotal)//int(i.id_productoPlaza.id_producto.precio)
+                ventas.write(f'''
+                ----------------------------------------------------------------
+|Nombre del producto: {i.id_productoPlaza.id_producto.nombreproducto} \n| Cantidad producto: {cantidad} \n|Total de venta: $ {i.valortotal} \n| Fecha venta: {i.fventa} \n 
+                ----------------------------------------------------------------
+                ''')
+        ventas.write('''Productos personalizados ( Pedidos )\n
+                ''')
+        for i in model:
+            if i.id_pedido!=None:
+                ventas.write(f'''
+                ----------------------------------------------------------------
+                |Descripcion: {i.id_pedido.descripcionpedido} \n| Cantidad: {(i.id_pedido.cantidadproducto)}\n| Precio: ${i.id_pedido.precio}   \n | Fecha venta: {i.fventa} \n 
+                ----------------------------------------------------------------
+                ''')
+            
+        ventas.close()
+    except:
+        messages.error(request, 'El archivo se en cuentra en uso')
+        return redirect('purga')
+    raiz = os.path.join(BASE_DIR, 'apps/adminApp/ventas')
+    if request.method == 'GET':
+        carpeta = []
+        with os.scandir(raiz) as directorio:
+            for d in directorio:
+                carpeta.append(d.name)
+        return render(request, 'admin/archivos.html', {'carpeta':carpeta, 'dir': dir})
+    else:
+        if request.POST.get('archivo'):
+            with open('apps/adminApp/ventas/'+request.POST['archivo'],'rb') as dir:
+                
+                response = HttpResponse(dir)
+                response['Content-Disposition'] = "attachment; filename=" + request.POST['archivo']
+                Ventas.objects.all().delete()
+                Pedidos.objects.all().delete()
+                return response
+        elif request.POST.get('archivoDel'):
+            # os.remove(os.path.basename('apps/adminApp/ventas/{}').format(request.POST['archivoDel']))
+            with os.scandir(raiz) as archivoDel:
+                for al in archivoDel:
+                    if request.POST['archivoDel'] == al.name:
+                        os.remove('{}/{}'.format(raiz,al.name))
+                        messages.success(request, 'archivo eliminado exitosamente!')
+                        return redirect('purga')
+        else:
+            with os.scandir(raiz) as archivoDel:
+                for al in archivoDel:
+                    os.remove('{}/{}'.format(raiz,al.name))
+            
+            messages.success(request, 'Todos los archivos se han eliminado con exito!')
+            return redirect('purga')
 
 def statistics(request):
 

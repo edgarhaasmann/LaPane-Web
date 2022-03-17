@@ -15,6 +15,7 @@
                     </thead>
                     <tbody>
                         {% for item in items %}
+                        {% if item.cantidadProductoPlaza > 0 %}
                         <tr class="producto">
                                 <td class="id_producto" hidden>{{item.id_productoPlaza}}</td>
                                 <td class="id_plaza" hidden>{{item.id_plaza.id_plaza}}</td>
@@ -25,6 +26,7 @@
                                     <td><button class="btn btn-primary" id="btn-agregarProducto">Agregar a la venta</button></td>
                                 </div>
                         </tr>
+                        {% endif %}
                         {% endfor %}
                     </tbody>
                 </table>

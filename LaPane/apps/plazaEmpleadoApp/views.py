@@ -97,11 +97,11 @@ class PedidoAbono:
                     messages.success(request, 'El producto se ha vendido!')
                 return redirect('pedidosList')
             # Abonos(valorAbono = request.GET.get('montoDelPedido'), id_pedido=request.GET.get('id_pedido'))
-#funcion para cancelar pedido
-def delPedido(request):
-    p = Pedidos.objects.filter(pk = request.GET.get('id_Del'))
-    if p:
-        p.delete()
-    messages.success(request, 'Pedido cancelado exitosamente!')
-    return redirect('pedidosList')
+    #funcion para cancelar pedido
+    def delPedido(self, request):
+        p = Pedidos.objects.filter(pk = request.GET.get('id_Del'))
+        if p:
+            p.delete()
+        messages.success(request, 'Pedido cancelado exitosamente!')
+        return redirect('pedidosList')
          
