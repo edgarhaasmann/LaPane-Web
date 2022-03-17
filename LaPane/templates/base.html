@@ -29,11 +29,11 @@
       </nav>
     {% endif %}
     <!--{% if user.is_authenticated.admin %}-->
-    {% include 'navbarAdmin.html' %}
-
+    
     <!-- {% elif user.is_authenticated.empleado %} -->
     {% include 'navbarEmpleado.html'%}
     <!-- {% endif %} -->
+    {% include 'navbarAdmin.html' %}
     {% include 'messages.html' %}
     {% block content %}
         <!--Todo contenido-->
