@@ -13,23 +13,27 @@ from django.contrib.auth.hashers import make_password, check_password
 from django.views.generic import ListView, CreateView
 #libreria para los mensajes 
 from django.contrib import messages
-
+from .forms import AgregarEmpleado
 from datetime import datetime
 import os
 
 # Create your views here.
 def index(request):
     user = Usuarios.objects.all()
-    return render(request, 'admin/agregar.html', {'data':user})
+    form = AgregarEmpleado()
+    return render(request, 'admin/agregar.html', {'data':user, 'form':form})
 
 def registerUser(request):
     date= datetime.now()
     print(date)
     # try:
     if request.POST['password'] == request.POST['password2']:
-        r = Usuarios(nombre=request.POST.get('nombre'), appaterno=request.POST.get('appaterno'),apmaterno = request.POST.get('apmaterno'), fnaciemiento = request.POST.get('fNacimiento'),user= request.POST.get('user'),password= make_password(request.POST.get('password'), None)).save()
-        messages.success(request, 'Usuario registrado exitosamente!')
-        # print('save!')
+        userRegistrado = Usuarios.objects.filter(user = request.POST.get('user'))
+        if userRegistrado:
+            messages.error(request, 'Algun empleado ya tiene el usuario registrado')
+        else:
+            Usuarios.objects.create_user(nombre = request.POST.get('nombre'), appaterno=request.POST.get('appaterno'),apmaterno = request.POST.get('apmaterno'), fnaciemiento = request.POST.get('fNacimiento'),user= request.POST.get('user'),password= (request.POST.get('password'))).save()
+            messages.success(request, 'Usuario registrado exitosamente!')
     else:
         messages.error(request, 'Las contraseñas no coinciden')
     return redirect('index')

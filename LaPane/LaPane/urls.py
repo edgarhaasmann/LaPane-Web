@@ -3,11 +3,13 @@ from django.urls import path
 from apps.userApp import views as authview
 from apps.adminApp import views as adminview
 from apps.plazaEmpleadoApp import views as plazaview
+from django.contrib.auth.views import LoginView, LogoutView
 
 pedidos = plazaview.PedidoAbono()
 inventario = adminview.Inventario()
 urlpatterns = [
     #rutas auth 
+    # path('', LoginView.as_view(template_name='index.html'), name='login'),
     path('', authview.auth, name = 'login'),
     path('logout', authview.out_auth, name = 'logout'),
 
