@@ -60,5 +60,13 @@ class Plazas(models.Model):
         return self.nombre
 
 
+class Sessiones(models.Model):
+    id_session = models.AutoField(primary_key=True)
+    id_usuario = models.ForeignKey(Usuarios, models.DO_NOTHING, db_column='id_usuario', blank=True, null=True)
+    key_session = models.CharField(max_length=30)
+    key_expire = models.DateField(null=False, blank=False)
+    class Meta:
+        managed = False
+        db_table = 'sessiones'
 
 

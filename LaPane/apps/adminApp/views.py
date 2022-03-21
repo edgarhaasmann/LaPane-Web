@@ -17,11 +17,12 @@ from .forms import AgregarEmpleado
 from datetime import datetime
 import os
 
+
 # Create your views here.
 def index(request):
     user = Usuarios.objects.all()
     form = AgregarEmpleado()
-    return render(request, 'admin/agregar.html', {'data':user, 'form':form})
+    return render(request, 'admin/agregar.html', {'data':user, 'form':form, 'Active': request.COOKIES})
 
 def registerUser(request):
     date= datetime.now()
