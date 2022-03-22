@@ -32,4 +32,5 @@ urlpatterns = [
     path('ventas/editPedido', pedidos.editPedido, name='editPedido'),
     path('ventas/delPedido', pedidos.delPedido, name='delPedido'),
     # path('admin/', admin.site.urls),
+
 ]
