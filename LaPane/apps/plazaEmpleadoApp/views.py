@@ -13,14 +13,16 @@ def listProductos(request):
         if request.COOKIES['key_rol']!= '#mpl$3Ad0':
                 noRol(request)
     except:
-        if KeyError:
-            return notSession(request)
+        return notSession(request)
     else:
         status = True
-        u = Sessiones.objects.get(key_session = request.COOKIES['key_session'])
-        isEmpleado = Empleados.objects.get(id_usuario = u.id_usuario)
+        try:
+            u = Sessiones.objects.get(key_session = request.COOKIES['key_session'])
+            isEmpleado = Empleados.objects.get(id_usuario = u.id_usuario)
+        except:
+            return notSession(request)
         items = ProductosPlaza.objects.filter(id_plaza = isEmpleado.id_plaza)
-        return render(request,'plazaEmpleado/ventas.html',{'items':items, 'status':status, 'tipoRol':isEmpleado.id_rol})
+        return render(request,'plazaEmpleado/ventas.html',{'items':items, 'status':status, 'tipoRol':isEmpleado})
     
     
 def realizarVenta(request):
@@ -28,26 +30,30 @@ def realizarVenta(request):
         request.COOKIES['key_session']
         if request.COOKIES['key_rol']!= '#mpl$3Ad0':
                 noRol(request)
-    except KeyError:
+
+    except:
         return notSession(request)
     else:
-        venta = Ventas()
-        venta.valortotal = request.GET['total_producto']
-        venta.id_productoPlaza = ProductosPlaza.objects.get(pk = request.GET['id_producto'])
-        venta.save()
-        productosplaza = ProductosPlaza.objects.filter(pk = request.GET['id_producto'])
-        if productosplaza:
-            for pplz in productosplaza:
-                pplz.cantidadProductoPlaza = int(pplz.cantidadProductoPlaza) - int(request.GET['cantidad'])
-                pplz.save()
-        messages.success(request, 'producto vendido')
-        return JsonResponse(
-            {
-                'content':{
-                    'message':'Producto vendido'
+        try:
+            venta = Ventas()
+            venta.valortotal = request.GET['total_producto']
+            venta.id_productoPlaza = ProductosPlaza.objects.get(pk = request.GET['id_producto'])
+            venta.save()
+            productosplaza = ProductosPlaza.objects.filter(pk = request.GET['id_producto'])
+            if productosplaza:
+                for pplz in productosplaza:
+                    pplz.cantidadProductoPlaza = int(pplz.cantidadProductoPlaza) - int(request.GET['cantidad'])
+                    pplz.save()
+            messages.success(request, 'producto vendido')
+            return JsonResponse(
+                {
+                    'content':{
+                        'message':'Producto vendido'
+                    }
                 }
-            }
-        )
+            )
+        except AttributeError:
+            return notSession(request)
 
      
 #funcion para abonar a pedido
@@ -67,13 +73,16 @@ class PedidoAbono:
         except KeyError:
             return notSession(request)
         else:
-            status = True
-            u = Sessiones.objects.get(key_session = request.COOKIES['key_session'])
-            isEmpleado = Empleados.objects.get(id_usuario = u.id_usuario)
+            try:
+                status = True
+                u = Sessiones.objects.get(key_session = request.COOKIES['key_session'])
+                isEmpleado = Empleados.objects.get(id_usuario = u.id_usuario)
+            except:
+                return notSession(request)
             pedido = Pedidos.objects.filter(id_plaza=isEmpleado.id_plaza.id_plaza)
             print(isEmpleado.id_plaza.id_plaza)
             p = Plazas.objects.filter(pk = isEmpleado.id_plaza.id_plaza)
-            return render(request, 'plazaEmpleado/plazaPedidos.html', {'pedidos':pedido, 'p':p, 'status':status, 'tipoRol':isEmpleado.id_rol})
+            return render(request, 'plazaEmpleado/plazaPedidos.html', {'pedidos':pedido, 'p':p, 'status':status, 'tipoRol':isEmpleado})
     
     #funcion para registrar pedido
     def registrarPedido(self, request):
@@ -84,8 +93,10 @@ class PedidoAbono:
         except KeyError:
             return notSession(request)
         else:
-            status = True
-            u = Sessiones.objects.get(key_session = request.COOKIES['key_session'])
+            try:
+                Sessiones.objects.get(key_session = request.COOKIES['key_session'])
+            except:
+                return notSession(request)
             if request.method == 'POST':
                 pedidos = Pedidos()
                 pedidos.id_plaza = Plazas.objects.get(pk = request.POST['id_plaza'])
@@ -107,6 +118,7 @@ class PedidoAbono:
             return notSession(request)
         else:
             if request.GET.get('id_Edit'):
+                
                 status = True
                 #datos del pedido
                 pedidos = Pedidos.objects.filter(pk=request.GET.get('id_Edit'))
@@ -122,26 +134,30 @@ class PedidoAbono:
                 
                 return render(request, 'plazaEmpleado/plazaPedidoAbonar.html', {'items':pedidos, 'total':self.contador, 'faltante':self.faltante, 'status':status})
             else:
-                total = self.contador+float(request.GET['montoDelPedido'])
-                if float(request.GET.get('montoDelPedido')) > self.precio or total>self.precio:
-                    messages.error(request, 'El monto supera el precio y por lo tanto no se ha podido realizar el abono')
-                    return redirect('pedidosList')
-                else:
-                    a = Abonos()
-                    a.valorAbono = request.GET['montoDelPedido']
-                    a.id_pedido = Pedidos.objects.get(pk = request.GET.get('id_pedido'))
-                    messages.success(request, 'El abono se ha hecho exitosamente!')
-                    a.save()
-                    
-                    if total == self.precio:
-                        p = Pedidos.objects.get(pk = request.GET.get('id_pedido'))
-                        p.estadoPago = 1
-                        p.save()
+                try:
+                    total = self.contador+float(request.GET['montoDelPedido'])
+                    if float(request.GET.get('montoDelPedido')) > self.precio or total>self.precio:
+                        messages.error(request, 'El monto supera el precio y por lo tanto no se ha podido realizar el abono')
+                        return redirect('pedidosList')
+                    else:
+                        a = Abonos()
+                        a.valorAbono = request.GET['montoDelPedido']
+                        a.id_pedido = Pedidos.objects.get(pk = request.GET.get('id_pedido'))
+                        messages.success(request, 'El abono se ha hecho exitosamente!')
+                        a.save()
+                        
+                        if total == self.precio:
+                            p = Pedidos.objects.get(pk = request.GET.get('id_pedido'))
+                            p.estadoPago = 1
+                            p.save()
 
-                        self.ventas.valortotal = total
-                        self.ventas.id_pedido = Pedidos.objects.get(pk = request.GET.get('id_pedido'))
-                        self.ventas.save()
-                        messages.success(request, 'El producto se ha vendido!')
+                            self.ventas.valortotal = total
+                            self.ventas.id_pedido = Pedidos.objects.get(pk = request.GET.get('id_pedido'))
+                            self.ventas.save()
+                            messages.success(request, 'El producto se ha vendido!')
+                        return redirect('pedidosList')
+                except ValueError:
+                    messages.error(request, 'No se ha hecho el abono por cantidad nula!')
                     return redirect('pedidosList')
                 # Abonos(valorAbono = request.GET.get('montoDelPedido'), id_pedido=request.GET.get('id_pedido'))
     #funcion para cancelar pedido

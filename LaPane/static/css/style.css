@@ -1,4 +1,55 @@
+/* @import url(https://fonts.googleapis.com/css?family=Roboto:300); */
+.body{
+    background: #000000; /* fallback for old browsers */
+    background: rgb(47, 48, 47);
+    background: linear-gradient(90deg, rgb(27, 27, 27) 0%, rgb(26, 26, 26) 50%);
+    font-family: "Roboto", sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;      
+}
+
 #Login{
+    width: 360px;
+    padding: 8% 0 0;
+    margin: auto;
+    top: 50%;
+    
+    transform: translate(10%, 0%);
+}
+    
+
+.i{
+    height: max-content;
+    text-align:center;
+    margin-right: flex 50%;
+    border-radius: 10px;
+    padding: 5px;
+    margin: 5px;
+}
+div > .btn{
+    background: #e3874f;
+    color: aliceblue;
+    align-items:center;
+}
+.text{
+    color: aliceblue;
+    font-family: 'Times New Roman', Times, serif;
+}
+.table{
+    background-color: #886a4a;
+}
+
+.navbar{
+    background-color: #b5b5b5;
+}
+
+button.btn{
+    background: #e3874f;
+    color: aliceblue;
+    align-items:center;
+}
+
+/* #Login{
     position: absolute;
     top: 50%;
     left: 50%;
@@ -8,7 +59,7 @@
 div.card{
     background-color: rgba(197, 197, 197, 0.63);
 }
-
+*/
 #tablaConScroll{
     overflow: scroll;
-}
+} 

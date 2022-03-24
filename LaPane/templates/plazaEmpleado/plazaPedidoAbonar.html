@@ -6,21 +6,21 @@
     <div class="container">
         <div class="row">
             <div class="col">
-                <h2>Abonar a producto</h2>
+                <h2 class="text">Abonar a producto</h2>
                 <div class="col">
                     <div class="col-lg-6 col-mb-6">
                         {% for a in items %}
                             <div class="id" hidden>{{a.id_pedido}}</div>
-                            <div class="detail"><label for="cliente">Cliente</label> <p>{{ a.nombrecliente}}</p></div>
-                            <div class="detail"><label for="Descripcion">Descripcion del pedido</label> <p> {{a.descripcionpedido}}</p></div>
-                            <div class="detail"><label for="cliente">Precio</label><p class="precio"> {{a.precio}}</p></div>
+                            <div class="detail text"><label for="cliente">Cliente</label> <p>{{ a.nombrecliente}}</p></div>
+                            <div class="detail text"><label for="Descripcion">Descripcion del pedido</label> <p> {{a.descripcionpedido}}</p></div>
+                            <div class="detail text"><label for="cliente">Precio</label><p class="precio"> {{a.precio}}</p></div>
                         {% endfor %}
                     </div>
                     <div class="col-lg-12 col-mb-12">
-                        <label for="Abonos">Total de abonos hechos hasta ahora</label>
-                        <p class="total"> {{total}}</p>
-                        <label for="Total">Faltante por abonar</label>
-                        <p>{{faltante}}</p>
+                        <label for="Abonos" class="text">Total de abonos hechos hasta ahora</label>
+                        <p class="total text"> {{total}}</p>
+                        <label class="text" for="Total">Faltante por abonar</label>
+                        <p class="text">{{faltante}}</p>
                     </div>
                     <div class="">
                         

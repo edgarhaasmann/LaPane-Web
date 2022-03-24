@@ -20,9 +20,9 @@ def index(request):
     try:
         request.COOKIES['key_session']
         if request.COOKIES['key_rol']!= '4<$4dM1n':
-            noRol(request)
+            return noRol(request)
     except KeyError:
-        return notSession(request)
+        return redirect('login')
     else:
         status = True
         u = Sessiones.objects.get(key_session = request.COOKIES['key_session'])
@@ -31,7 +31,7 @@ def index(request):
         s = Sessiones.objects.get(key_session = request.COOKIES['key_session'])
         isEmpleado = Empleados.objects.get(id_usuario = s.id_usuario)        
         form = AgregarEmpleado()
-        return render(request, 'admin/agregar.html', {'data':user, 'form':form, 'status':status, 'tipoRol':isEmpleado.id_rol})
+        return render(request, 'admin/agregar.html', {'data':user, 'form':form, 'status':status, 'tipoRol':isEmpleado})
 
 def registerUser(request):
     date= datetime.now()
@@ -42,7 +42,7 @@ def registerUser(request):
         if userRegistrado:
             messages.error(request, 'Algun empleado ya tiene el usuario registrado')
         else:
-            Usuarios.objects.create_user(nombre = request.POST.get('nombre'), appaterno=request.POST.get('appaterno'),apmaterno = request.POST.get('apmaterno'), fnaciemiento = request.POST.get('fNacimiento'),user= request.POST.get('user'),password= (request.POST.get('password'))).save()
+            Usuarios.objects.create_user(nombre = request.POST.get('nombre').capitalize(), appaterno=request.POST.get('appaterno').capitalize(),apmaterno = request.POST.get('apmaterno').capitalize(), fnaciemiento = request.POST.get('fNacimiento'),user= request.POST.get('user'),password= (request.POST.get('password'))).save()
             messages.success(request, 'Usuario registrado exitosamente!')
     else:
         messages.error(request, 'Las contraseñas no coinciden')
@@ -68,7 +68,7 @@ def editUser(request):
             dataUser = Empleados.objects.filter(id_usuario = request.GET.get('id_empleado'))
             plz = Plazas.objects.all()
             rol = Roles.objects.all()
-            return render(request,'admin/modalEditUser.html',{'data':data,'dataUser':dataUser, 'plz':plz, 'rol':rol, 'status':True, 'tipoRol':isEmpleado.id_rol})
+            return render(request,'admin/modalEditUser.html',{'data':data,'dataUser':dataUser, 'plz':plz, 'rol':rol, 'status':True, 'tipoRol':isEmpleado})
         else:
             usuario = Empleados.objects.filter(id_usuario = request.GET['empleado'])
             if usuario:
@@ -116,11 +116,14 @@ class Inventario:
         except KeyError:
             return notSession(request)
         else:
-            status = True
-            u = Sessiones.objects.get(key_session = request.COOKIES['key_session'])
-            isEmpleado = Empleados.objects.get(id_usuario = u.id_usuario)
+            try:
+                status = True
+                u = Sessiones.objects.get(key_session = request.COOKIES['key_session'])
+                isEmpleado = Empleados.objects.get(id_usuario = u.id_usuario)
+            except:
+                return notSession(request)
             products = Productos.objects.all()
-            return render(request, 'admin/adminInventario.html', {'products':products, 'status':True, 'tipoRol':isEmpleado.id_rol})
+            return render(request, 'admin/adminInventario.html', {'products':products, 'status':True, 'tipoRol':isEmpleado})
     #metodo para registrar nuevo producto
     def AddProducto(self, request):
         if request.POST.get('nombreProducto') == '' and request.POST.get('cantidad') =='' and request.POST.get('precio') == '':
@@ -138,13 +141,15 @@ class Inventario:
         except KeyError:
             return notSession(request)
         else:
-            status = True
-            u = Sessiones.objects.get(key_session = request.COOKIES['key_session'])
-            isEmpleado = Empleados.objects.get(id_usuario = u.id_usuario)
+            try:
+                u = Sessiones.objects.get(key_session = request.COOKIES['key_session'])
+                isEmpleado = Empleados.objects.get(id_usuario = u.id_usuario)
+            except:
+                return notSession(request)
             if request.GET.get('id'):
                     p = Productos.objects.filter(pk = request.GET['id'])
                     plza = Plazas.objects.all()
-                    return render(request,'admin/modalEditProduct.html',{'product':p, 'plaza':plza, 'status':True, 'tipoRol':isEmpleado.id_rol})
+                    return render(request,'admin/modalEditProduct.html',{'product':p, 'plaza':plza, 'status':True, 'tipoRol':isEmpleado})
             #actualizar datos del producto
             elif request.GET.get('id_producto'):
                 producto = Productos.objects.get(pk = request.GET['id_producto'])            
@@ -202,9 +207,12 @@ def purgVentas(request):
     except KeyError:
         return notSession(request)
     else:
-        status = True
-        u = Sessiones.objects.get(key_session = request.COOKIES['key_session'])
-        isEmpleado = Empleados.objects.get(id_usuario = u.id_usuario)
+        try:
+            status = True
+            u = Sessiones.objects.get(key_session = request.COOKIES['key_session'])
+            isEmpleado = Empleados.objects.get(id_usuario = u.id_usuario)
+        except:
+            return notSession(request)
         model = Ventas.objects.all()
         date = datetime.today().strftime('%Y-%m-%d')
         dir = os.path.join(BASE_DIR,'apps/adminApp/ventas')
@@ -242,7 +250,7 @@ def purgVentas(request):
             with os.scandir(raiz) as directorio:
                 for d in directorio:
                     carpeta.append(d.name)
-            return render(request, 'admin/archivos.html', {'carpeta':carpeta, 'dir': dir, 'status':status, 'tipoRol':isEmpleado.id_rol})
+            return render(request, 'admin/archivos.html', {'carpeta':carpeta, 'dir': dir, 'status':status, 'tipoRol':isEmpleado})
         else:
             if request.POST.get('archivo'):
                 with open('apps/adminApp/ventas/'+request.POST['archivo'],'rb') as dir:
@@ -250,7 +258,7 @@ def purgVentas(request):
                     response = HttpResponse(dir)
                     response['Content-Disposition'] = "attachment; filename=" + request.POST['archivo']
                     Ventas.objects.all().delete()
-                    Pedidos.objects.all().delete()
+                    Pedidos.objects.filter(estadoPago = 1).delete()
                     return response
             elif request.POST.get('archivoDel'):
                 # os.remove(os.path.basename('apps/adminApp/ventas/{}').format(request.POST['archivoDel']))
@@ -276,9 +284,12 @@ def statistics(request):
     except KeyError:
         return notSession(request)
     else:
-        status = True
-        u = Sessiones.objects.get(key_session = request.COOKIES['key_session'])
-        isEmpleado = Empleados.objects.get(id_usuario = u.id_usuario)
+        try:
+            status = True
+            u = Sessiones.objects.get(key_session = request.COOKIES['key_session'])
+            isEmpleado = Empleados.objects.get(id_usuario = u.id_usuario)
+        except:
+            return notSession(request)
         data = Ventas.objects.all()
         productos,votos = [],[]
         for d in data:
@@ -299,6 +310,6 @@ def statistics(request):
                     votos.insert(0, d.id_pedido.cantidadproducto)
                 else:
                     votos[0] = int(votos[0] + int(d.id_pedido.cantidadproducto))
-        return render(request, 'admin/statistics.html',{'nombres':productos, 'votos':votos, 'status':status, 'tipoRol':isEmpleado.id_rol})
+        return render(request, 'admin/statistics.html',{'nombres':productos, 'votos':votos, 'status':status, 'tipoRol':isEmpleado})
 
 

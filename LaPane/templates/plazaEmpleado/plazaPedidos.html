@@ -7,22 +7,22 @@
         <div class="row">
             <div class="col">
                 {%if pedidos%}
-                
+                <h2 class="text">Pedidos hechos</h2>
                 <table class="table">
                     <thead>
-                        <th>
+                        <th class="text">
                             Nombre del cliente
                         </th>
-                        <th>
+                        <th class="text">
                             Descripcion del pedido
                         </th>
-                        <th>
+                        <th class="text">
                             Precio
                         </th>
-                        <th>
+                        <th class="text">
                             Cantidad 
                         </th>
-                        <th>
+                        <th class="text">
                             Opciones
                         </th>
                     </thead>
@@ -30,10 +30,10 @@
                         {% for p in pedidos %}
                             {% if p.estadoPago == 0  %}
                                 <tr>
-                                    <td>{{p.nombrecliente}}  </td>
-                                    <td>{{p.descripcionpedido}} </td>
-                                    <td>{{p.precio}}</td>
-                                    <td>{{p.cantidadproducto}}</td>
+                                    <td class="text">{{p.nombrecliente}}  </td>
+                                    <td class="text">{{p.descripcionpedido}} </td>
+                                    <td class="text">{{p.precio}}</td>
+                                    <td class="text">{{p.cantidadproducto}}</td>
                                     <td><form action="{% url 'editPedido' %}" method="get"><input hidden type="text" value="{{p.id_pedido}}" name="id_Edit"> <button class="btn btn-primary"  type="submit">Abonar a producto</button></form> 
                                         <form action="{% url 'delPedido' %}" method="get"><input hidden type="text" value="{{p.id_pedido}}" name="id_Del"> <button class="btn btn-danger">Cancerlar el pedido</button> </form></td>
                                 </tr>
@@ -42,13 +42,13 @@
                     </tbody>
                 </table>
                 {% else %}
-                    
+                        
                         <img class="mx-auto noPedidos" src="{% static 'img/noRegistro.gif' %}" style="margin-right: 0%; margin-top: 1%; height: 390px; width:500px; " >
                     
                 {%endif%}
             </div>
             <div class="col">
-                <h2> Registrar nuevo pedido</h2>
+                <h2 class="text"> Registrar nuevo pedido</h2>
                         <form action="{%url 'registrarPedido'%}" method="post">
                             {% csrf_token %}
                             <div class="mb-3">

@@ -7,7 +7,7 @@
 <div class="container-fluid">
     <div class="row">
         <div class="col">
-            <h2>Agregar empleado</h2>
+            <h2 class="text">Agregar empleado</h2>
             <form  action="{% url 'registerUser'%}" method="post">
                 {% csrf_token %} 
                 
@@ -21,7 +21,7 @@
                         <input  class="form-control" type="text" name="apmaterno" placeholder="Apellido materno" autocomplete="off" required>
                     </div>
                     <div class="mb-3">
-                        <label for="fNacimiento">Fecha nacimiento</label>
+                        <label class="text" for="fNacimiento">Fecha nacimiento</label>
                         <input  class="form-control" type="date" name="fNacimiento" required>
                     </div>
                     <div class="mb-3">
@@ -34,30 +34,30 @@
                         <input  class="form-control" type="password" name="password2" placeholder="Repita la contraseña" required>
                     </div>
                 <center>  
-                    <button class=" btn- btn-outline-primary" type="submit">Registrar</button>
+                    <button class=" btn btn-primary" type="submit">Registrar</button>
                 </center>
 
             </form>
            
         </div>
         <div class="col">
-            <h2>Empleados disponibles</h2>
+            <h2 class="text">Empleados disponibles</h2>
             <table class="table">
                 <thead>
                     <thead>
-                        <th>Nombre</th>
-                        <th>Apellido paterno</th>
-                        <th>Apellido materno</th>
-                        <th>Usuario</th>
-                        <th>Opciones</th>
+                        <th class="text">Nombre</th>
+                        <th class="text">Apellido paterno</th>
+                        <th class="text">Apellido materno</th>
+                        <th class="text">Usuario</th>
+                        <th class="text">Opciones</th>
                     </thead>
                     <tbody>
                         {%for d in data %}
                         <tr>
-                            <th> {{d.nombre}} </th>
-                            <th> {{d.appaterno}} </th>
-                            <th> {{d.apmaterno}} </th>
-                            <th> {{d.user}} </th>
+                            <th class="text"> {{d.nombre}} </th>
+                            <th class="text"> {{d.appaterno}} </th>
+                            <th class="text"> {{d.apmaterno}} </th>
+                            <th class="text"> {{d.user}} </th>
                             <th> 
                                 <form action="{% url 'editUser' %}" method="get">
                                     <input type="text" value="{{d.id_usuario}}" name="id_empleado" hidden>

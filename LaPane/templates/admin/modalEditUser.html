@@ -10,8 +10,8 @@
             <form method="get">
                     {% for d in data %}
                         <input type="text" value="{{d.id_usuario}}" name="empleado" hidden>
-                        <h2 class="text-info">Datos del empleado</h2>
-                        <label >Nombre del empleado:</label>
+                        <h2 class="text-info text">Datos del empleado</h2>
+                        <label class="text">Nombre del empleado:</label>
                         <p>  
                             <input type="text" value="{{d.nombre}} {{d.appaterno}} {{d.apmaterno}}" disabled>
                         </p>
@@ -19,23 +19,23 @@
                     
                     {%if dataUser%}
                         {% for dU in dataUser %}
-                            <label > El empleado esta asignado a: </label>
+                            <label  class="text"> El empleado esta asignado a: </label>
                             <p class="text-success">
                                 {{dU.id_plaza.nombre}}, {{dU.id_plaza.ubicacion}}. 
                             </p>
-                            <label >Tiene el rol de:</label>
+                            <label class="text">Tiene el rol de:</label>
                             <p class="text-success">
                                 {{dU.id_rol.tipoRol}}.
                             </p>
                         {% endfor %}
                     {% else %}
-                            <label for="noData"> El usuario no tiene registro!</label>
+                            <label class="text" for="noData"> El usuario no tiene registro!</label>
                     {% endif %}
 
                 </div>
                 <div class="col">
-                    <h2 class="text-info">Opciones</h2>
-                    <label for="plaza">Asignar a una plaza? Plazas disponibles!</label>
+                    <h2 class="text-info text">Opciones</h2>
+                    <label class="text" for="plaza">Asignar a una plaza? Plazas disponibles!</label>
                     <p>
 
                         <select name="plaza" required>
@@ -46,7 +46,7 @@
                         </select>  
                     </p>
                     <div class="mb-3">
-                        <label for="rol">Dar le un rol? Roles registrados!</label>
+                        <label class="text" for="rol">Dar le un rol? Roles registrados!</label>
                         <p>
                             <select name="rol" required>
                                 <option disabled selected> Selececcione el rol del usuario</option>

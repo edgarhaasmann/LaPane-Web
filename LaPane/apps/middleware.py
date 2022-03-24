@@ -6,6 +6,7 @@ from .adminApp.models import Empleados, Roles
 from django.shortcuts import redirect
 from datetime import datetime
 def notSession(request, val = None):
+        # Sessiones.objects.get(key_session = request.COOKIES['key_session']).delete()
         messages.error(request, 'No hay session o se ha cerrado ')
         ret = redirect('login')
         ret.delete_cookie('key_rol')
@@ -17,12 +18,15 @@ def noModule(request, val=None):
     request.COOKIES['key_session']
 
 def noRol(request, val = None):
-    messages.error(request, 'No tiene acceso al modulo')
-    ret = redirect('login')
-    ret.delete_cookie('key_rol')
-    ret.delete_cookie('key_session')
-    return ret, val
-
+    try:
+        Sessiones.objects.get(key_session = request.COOKIES['key_session']).delete()
+        messages.error(request, 'No tiene acceso al modulo')
+        ret = redirect('login')
+        ret.delete_cookie('key_rol')
+        ret.delete_cookie('key_session')
+        return ret
+    except:
+        return notSession(request)
 
 
     

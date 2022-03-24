@@ -7,10 +7,10 @@
     <div class="row">
         <h2 class="text-warning">Las acciones aqui afectaran las ventas hechas y/o los archivos existentes!</h2>
         <div class="col">
-            <h2 class="text-danger">Registro y purga de ventas</h2>
+            <h2 class="text-danger text">Registro y purga de ventas</h2>
             <p>
             
-                <h2 class="text-danger">Desea descargar algun archivo ? Archivos disponibles</h2>
+                <h2 class="text-danger text">Desea descargar algun archivo ? Archivos disponibles</h2>
                     <form action="{% url 'purga' %}" method="post">
                     {%csrf_token%}
                         <select name="archivo">
@@ -25,7 +25,7 @@
             </p>
         </div>
         <div class="col">
-            <h2 class="text-danger">Desea eliminar algun archivo?</h2>
+            <h2 class="text-danger text">Desea eliminar algun archivo?</h2>
             <form action="{% url 'purga' %}" method="post">
                 {%csrf_token%}
                     <select name="archivoDel">

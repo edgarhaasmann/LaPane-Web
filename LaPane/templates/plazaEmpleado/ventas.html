@@ -5,7 +5,7 @@
     <div class="container-fluid">
         <div class="row">
             <div class="col">
-                <h2>Lista de productos</h2>
+                <h2 class="text">Lista de productos</h2>
                 <table class=" table">
                     <thead>
                         <th>Nombre producto</th>
@@ -17,11 +17,11 @@
                         {% for item in items %}
                         {% if item.cantidadProductoPlaza > 0 %}
                         <tr class="producto">
-                                <td class="id_producto" hidden>{{item.id_productoPlaza}}</td>
-                                <td class="id_plaza" hidden>{{item.id_plaza.id_plaza}}</td>
-                                <td class="nombre">{{item.id_producto.nombreproducto}}</td>
-                                <td class="cantidad">{{item.cantidadProductoPlaza}} piezas</td>
-                                <td class="precio">{{item.id_producto.precio}}</td>
+                                <td class="id_producto text" hidden>{{item.id_productoPlaza}}</td>
+                                <td class="id_plaza text" hidden>{{item.id_plaza.id_plaza}}</td>
+                                <td class="nombre text">{{item.id_producto.nombreproducto}}</td>
+                                <td class="cantidad text">{{item.cantidadProductoPlaza}} piezas</td>
+                                <td class="precio text">{{item.id_producto.precio}}</td>
                                 <div class="item-details">
                                     <td><button class="btn btn-primary" id="btn-agregarProducto">Agregar a la venta</button></td>
                                 </div>
@@ -33,13 +33,13 @@
 
             </div>
             <div class="col">
-                <h2>Canasta de venta</h2>
+                <h2 class="text">Canasta de venta</h2>
                 <form>
                     <table class="table">
                         <thead >
-                            <th> Nombre producto</th>
-                            <th>cantidad</th>
-                            <th>precio</th>
+                            <th class="text"> Nombre producto</th>
+                            <th class="text">cantidad</th>
+                            <th class="text">precio</th>
                         </thead>
                         <tbody class="tbody">
                           
@@ -47,8 +47,8 @@
                     </table>
                     <div>
                         <button type="button" id="btn-vender" class="btn btn-outline-success">Realizar venta</button>
-                        <label>Total: $</label>
-                        <label for="Total" id="total"> </label>
+                        <label class="text">Total: $</label>
+                        <label class="text" for="Total" id="total"> </label>
                     </div>
                 </form>
             </div>
