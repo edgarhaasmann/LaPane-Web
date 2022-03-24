@@ -19,6 +19,7 @@ urlpatterns = [
     path('admin/editUser', adminview.editUser, name='editUser'),
     path('admin/delUser', adminview.delUser, name='delUser'),
     path('admin/adminInventario', inventario.getInventio, name='getProduct'),
+    path('admin/agregarPlaza', adminview.addPlaza, name='addPlaza'),
     path('admin/registerProduct', inventario.AddProducto, name='registerProduct'),
     path('admin/editProduct',inventario.editProduct, name='editProduct'),
     path('admin/delProduct', inventario.delProduct, name='delProduct'),

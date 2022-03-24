@@ -3,7 +3,7 @@
 {% block head %} Editar producto {% endblock %}
 
 {% block content %}
-<div class="conatiner">
+<div class="container">
     <div class="row">
         <div class="col">
             <h2 class="text">Editar datos del producto</h2>
@@ -56,6 +56,9 @@
                     <button type="submit" class="btn btn-success">Agregar producto a plaza</button>
             </form>
 
+        </div>
+        <div class="col-lg-12">
+            <h2 class="text">Desea agregar otra plaza? <a href="{%url 'addPlaza'%}">click aqui! </a></h2>
         </div>
     </div>
     

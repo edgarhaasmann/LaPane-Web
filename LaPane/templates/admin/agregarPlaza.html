@@ -1,0 +1,25 @@
+{%extends 'base.html'%}
+{% block head %}Agregar plaza{% endblock %}
+
+{% block content %}
+<div class="container container-newPlaza">
+    <div class="row">
+        <div class="col">
+            <h2 class="text">Nueva plaza</h2>
+            <form action="{% url 'addPlaza' %}" method="post">
+                {% csrf_token %}
+                <div class="mb-3">
+                    <input class="form-control" type="text" placeholder="Nombre de la plaza" autocomplete="off" title="Si este campo queda vacio por defecto se le asignara 'La Pane'" name="nombre">
+                </div>
+                <div class="mb-3">
+                    <input class="form-control" type="text" placeholder="Ubicacion de la nueva plaza" name="ubicacion" required>
+                </div>
+
+                <button type="submit" class="btn btn-success">Agregar plaza</button>
+            </form>
+        </div>
+    </div>
+
+</div>
+
+{% endblock %}

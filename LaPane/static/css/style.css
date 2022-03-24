@@ -35,6 +35,9 @@ div > .btn{
     color: aliceblue;
     font-family: 'Times New Roman', Times, serif;
 }
+.textNav{
+    color: #000000;
+}
 .table{
     background-color: #886a4a;
 }
@@ -43,12 +46,18 @@ div > .btn{
     background-color: #b5b5b5;
 }
 
+
 button.btn{
     background: #e3874f;
     color: aliceblue;
     align-items:center;
 }
-
+.container-newPlaza{
+    position: relative;
+    top: 50%;
+    margin: 10%;
+    
+}
 /* #Login{
     position: absolute;
     top: 50%;

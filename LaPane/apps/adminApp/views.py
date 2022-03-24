@@ -101,7 +101,30 @@ def delUser(request):
     r.delete()
     messages.success(request, f'El usuario ha sido eliminado exitosamente!')
     return redirect('index')
+def addPlaza(request):
 
+    try:
+        request.COOKIES['key_session']
+        if request.COOKIES['key_rol']!= '4<$4dM1n':
+            return noRol(request)
+    except:
+        return notSession(request)
+    else:
+        if request.method == 'GET':
+            try:
+                u = Sessiones.objects.get(key_session = request.COOKIES['key_session'])
+                isEmpleado = Empleados.objects.get(id_usuario = u.id_usuario)
+            except:
+                return notSession(request)
+            return render(request, 'admin/agregarPlaza.html', {'status':True, 'tipoRol':isEmpleado})
+        else:
+            n = request.POST['nombre']
+            u = request.POST['ubicacion']
+            if n =='':
+                n = 'La pane'
+            Plazas(nombre = n, ubicacion = u).save()
+            messages.success(request, 'Plaza registrada exitosamente')
+            return redirect('getProduct')
 class Inventario:
     def __init__(self):
         self.productos = Productos()
