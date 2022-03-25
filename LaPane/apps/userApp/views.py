@@ -23,7 +23,7 @@ def auth(request):
     if request.method == 'GET':
         return render(request,'index.html')
     elif request.method =='POST':
-        userName= request.POST['user']
+        userName= request.POST['username']
         password = request.POST['password'] 
         try:
             isUser = Usuarios.objects.get(user = userName)
@@ -60,6 +60,6 @@ def out_auth(request):
     ret = redirect('login')
     ret.delete_cookie('key_session')
     ret.delete_cookie('key_rol')
-    messages.success(request, 'sesion cerrada')
+    messages.success(request, 'sesión cerrada')
     return ret
 

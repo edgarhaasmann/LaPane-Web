@@ -10,19 +10,20 @@ from .models import Empleados, Roles
 from..middleware import notSession, noRol
 #libreria para los mensajes 
 from django.contrib import messages
-from .forms import AgregarEmpleado
 from datetime import datetime
 import os
 
 status = False
 # Create your views here.
+#funcion para obtener todos los empleados
 def index(request):
+    #verificacion de session iniciada
     try:
         request.COOKIES['key_session']
         if request.COOKIES['key_rol']!= '4<$4dM1n':
             return noRol(request)
-    except KeyError:
-        return redirect('login')
+    except:
+        return notSession(request)
     else:
         status = True
         u = Sessiones.objects.get(key_session = request.COOKIES['key_session'])
@@ -30,13 +31,11 @@ def index(request):
         user = Usuarios.objects.all()
         s = Sessiones.objects.get(key_session = request.COOKIES['key_session'])
         isEmpleado = Empleados.objects.get(id_usuario = s.id_usuario)        
-        form = AgregarEmpleado()
-        return render(request, 'admin/agregar.html', {'data':user, 'form':form, 'status':status, 'tipoRol':isEmpleado})
-
+        return render(request, 'admin/agregar.html', {'data':user, 'status':status, 'tipoRol':isEmpleado})
+#registrar nuevos usuarios
 def registerUser(request):
     date= datetime.now()
     print(date)
-    # try:
     if request.POST['password'] == request.POST['password2']:
         userRegistrado = Usuarios.objects.filter(user = request.POST.get('user'))
         if userRegistrado:
@@ -47,17 +46,14 @@ def registerUser(request):
     else:
         messages.error(request, 'Las contraseñas no coinciden')
     return redirect('index')
-    # except:
-    #     messages.error(request, 'Algo ha salido mal y no se pudo registrar el usuario')
-    #     return redirect('index')
-        # print(''' don't save! ''')
+#funcion para asignar plaza, rol, etc.
 def editUser(request):
     # return render(request,'admin/modalEditUser.html')
     try:
         request.COOKIES['key_session']
         if request.COOKIES['key_rol']!= '4<$4dM1n':
             noRol(request)
-    except KeyError:
+    except:
         return notSession(request)
     else:
         status = True
@@ -96,11 +92,18 @@ def editUser(request):
                 empleados.save()
                 messages.success(request, 'El empleado ha sido registrado en la plaza exitosamente!')
         return redirect('index')
+#funcion para aliminar usuario
 def delUser(request):
-    r = Usuarios.objects.filter(pk = request.GET['delUser'])
-    r.delete()
-    messages.success(request, f'El usuario ha sido eliminado exitosamente!')
-    return redirect('index')
+    try: 
+        request.COOKIES['key_session']
+    except:
+        return notSession(request)
+    else:
+        r = Usuarios.objects.filter(pk = request.GET['delUser'])
+        r.delete()
+        messages.success(request, f'El usuario ha sido eliminado exitosamente!')
+        return redirect('index')
+# funcion para agregar plaza
 def addPlaza(request):
 
     try:
@@ -125,18 +128,20 @@ def addPlaza(request):
             Plazas(nombre = n, ubicacion = u).save()
             messages.success(request, 'Plaza registrada exitosamente')
             return redirect('getProduct')
+#clase para administrar inventario
 class Inventario:
+    #constructor
     def __init__(self):
         self.productos = Productos()
         self.productosplaza = ProductosPlaza()
         self.plaza = Plazas()
-
+    #metodo para obtener todo el inventario
     def getInventio(self, request):
         try:
             request.COOKIES['key_session']
             if request.COOKIES['key_rol']!= '4<$4dM1n':
                 noRol(request)
-        except KeyError:
+        except:
             return notSession(request)
         else:
             try:
@@ -161,7 +166,7 @@ class Inventario:
             request.COOKIES['key_session']
             if request.COOKIES['key_rol']!= '4<$4dM1n':
                 noRol(request)
-        except KeyError:
+        except:
             return notSession(request)
         else:
             try:
@@ -221,13 +226,13 @@ class Inventario:
             p.delete()
             messages.success(request, 'Producto eliminado')
             return redirect('getProduct')
-
+#obtener todas las ventas y pedidos y pasarlos a un archivo de tipo doc
 def purgVentas(request):
     try:
         request.COOKIES['key_session']
         if request.COOKIES['key_rol']!= '4<$4dM1n':
             noRol(request)
-    except KeyError:
+    except:
         return notSession(request)
     else:
         try:
@@ -291,20 +296,24 @@ def purgVentas(request):
                             os.remove('{}/{}'.format(raiz,al.name))
                             messages.success(request, 'archivo eliminado exitosamente!')
                             return redirect('purga')
+                    
             else:
-                with os.scandir(raiz) as archivoDel:
-                    for al in archivoDel:
-                        os.remove('{}/{}'.format(raiz,al.name))
-                
-                messages.success(request, 'Todos los archivos se han eliminado con exito!')
+                if request.POST.get('nada'):
+                    messages.error(request, 'Debe de seleccionar algun archivo en caso contrario precione el boton de eliminar todos!')
+                else:
+                    with os.scandir(raiz) as archivoDel:
+                        for al in archivoDel:
+                            os.remove('{}/{}'.format(raiz,al.name))
+                    
+                    messages.success(request, 'Todos los archivos se han eliminado con exito!')
                 return redirect('purga')
-
+#funcion para las estadisticas de ventas
 def statistics(request):
     try:
         request.COOKIES['key_session']
         if request.COOKIES['key_rol']!= '4<$4dM1n':
             noRol(request)
-    except KeyError:
+    except:
         return notSession(request)
     else:
         try:

@@ -2,7 +2,7 @@
 
 {% if messages %}
 {% for message in messages%}
-    <div class="alert {% if message.tags == 'success'%} alert-success {% elif message.tags == 'warning'%} alert-warning {%else%} alert-danger {%endif%}" id="mensajes"> <!--segunda forma de condicionar mensajes y clases-->
+    <div class="alert {% if message.tags == 'success'%} alert-success {% elif message.tags == 'warning'%} alert-warning {%else%} alert-danger {%endif%}" id="mensajes" role="alert"> <!--segunda forma de condicionar mensajes y clases-->
         <button class="float-end btn-close"  aria-label="Close" id="ocultar"></button>
         {{message}}
     </div>

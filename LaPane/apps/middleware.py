@@ -7,7 +7,7 @@ from django.shortcuts import redirect
 from datetime import datetime
 def notSession(request, val = None):
         # Sessiones.objects.get(key_session = request.COOKIES['key_session']).delete()
-        messages.error(request, 'No hay session o se ha cerrado ')
+        messages.error(request, 'No hay sesión iniciada o se ha cerrado ')
         ret = redirect('login')
         ret.delete_cookie('key_rol')
         ret.delete_cookie('key_session')
