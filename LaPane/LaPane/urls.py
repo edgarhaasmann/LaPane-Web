@@ -4,6 +4,8 @@ from apps.userApp import views as authview
 from apps.adminApp import views as adminview
 from apps.plazaEmpleadoApp import views as plazaview
 from django.contrib.auth.views import LoginView, LogoutView
+from django.conf import settings
+from django.conf.urls.static import static
 
 pedidos = plazaview.PedidoAbono()
 inventario = adminview.Inventario()
@@ -34,4 +36,4 @@ urlpatterns = [
     path('ventas/delPedido', pedidos.delPedido, name='delPedido'),
     # path('admin/', admin.site.urls),
 
-]
+] + static(settings.STATIC_URL, document_root = settings.STATIC_ROOT)
