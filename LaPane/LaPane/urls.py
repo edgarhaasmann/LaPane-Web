@@ -26,6 +26,7 @@ urlpatterns = [
     path('admin/editProduct',inventario.editProduct, name='editProduct'),
     path('admin/delProduct', inventario.delProduct, name='delProduct'),
     path('admin/estadisticas', adminview.statistics, name='statistics'),
+    path('admin/pedidos', adminview.pedidosList, name='pedidosAdminList'),
     path('admin/purgaVenta', adminview.purgVentas, name='purga'),
     #rutas empleadoPlaza
     path('ventas/RealizarVenta', plazaview.listProductos, name = 'venta'),

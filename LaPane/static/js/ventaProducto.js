@@ -57,26 +57,41 @@ $(document).ready(function(){
    $(document).on('click','#btn-vender', function(){
       const item = document.querySelectorAll('.item-Producto');
       item.forEach((i)=>{
-         let id_producto = i.querySelector('.id').value;
-         let total_producto = i.querySelector('.totlp').value;
-         let id_plaza = i.querySelector('.id_plaza').value;
-         let cantidad = i.querySelector('.cantidadP').value;
+         let id_producto = i.querySelector('.id').value,
+             total_producto = i.querySelector('.totlp').value,
+             id_plaza = i.querySelector('.id_plaza').value,
+             cantidad = i.querySelector('.cantidadP').value;
+         
+         if (cantidad ===''){
+            alert('la cantidad no puede quedar vacia')
+         }else if (cantidad==='0'){
+            alert('La cantidad no puede ser cero')
+         }else{
 
-         $.ajax({
-            url:'Venta',
-            type:'GET',
-            data:{
-               id_producto,
-               total_producto,
-               id_plaza,
-               cantidad
-            },
-            dataType:'json',
-            success:function(data){
-               let message = data.content.message;
-               location.reload( );
-            }
-         });
+            $.ajax({
+               url:'Venta',
+               type:'GET',
+               data:{
+                  id_producto,
+                  total_producto,
+                  id_plaza,
+                  cantidad
+               },
+               dataType:'json',
+               success:function(data){
+                  let message = data.content.message;
+                  console.log('false');
+                  location.reload( );
+               },error:function(data){
+                  let message = data.content.message;
+                  console.log(message);
+                  // alert(message.status);
+                  // console.log(message.content.status, message.content.message);
+                  // location.reload();
+               }
+   
+            });
+         }
       });
    });
    

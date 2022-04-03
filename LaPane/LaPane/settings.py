@@ -15,9 +15,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-v2_x6a19i+k^je14p7n*sf$kw78q1tq%^t2e0%u@7o%+yo7*(r'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = []
 
 
 # Application definition
@@ -70,23 +70,23 @@ WSGI_APPLICATION = 'LaPane.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.mysql',
-#         'NAME': 'db_lapane',
-#         'USER':'root',
-#         'PASSWORD': '',
-#         'HOST':'localhost',
-#         'PORT':'3306'
-#     }
-# }
-import dj_database_url
-from decouple import config
-DATABASE = {
-    'default': dj_database_url.config(
-        default=config('DATABASE_URL')
-    )
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'db_lapane',
+        'USER':'root',
+        'PASSWORD': '',
+        'HOST':'localhost',
+        'PORT':'3306'
+    }
 }
+# import dj_database_url
+# from decouple import config
+# DATABASE = {
+#     'default': dj_database_url.config(
+#         default=config('DATABASE_URL')
+#     )
+# }
 
 # Password validation
 # https://docs.djangoproject.com/en/4.0/ref/settings/#auth-password-validators

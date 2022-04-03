@@ -1,4 +1,4 @@
-from django.http import JsonResponse
+from django.http import Http404, JsonResponse
 from django.shortcuts import redirect, render
 from ..adminApp.models import Empleados
 from ..userApp.models import Plazas, Sessiones
@@ -35,28 +35,36 @@ def realizarVenta(request):
         return notSession(request)
     else:
         try:
-            venta = Ventas()
-            venta.valortotal = request.GET['total_producto']
-            venta.id_productoPlaza = ProductosPlaza.objects.get(pk = request.GET['id_producto'])
-            venta.save()
-            productosplaza = ProductosPlaza.objects.filter(pk = request.GET['id_producto'])
-            if productosplaza:
-                for pplz in productosplaza:
-                    pplz.cantidadProductoPlaza = int(pplz.cantidadProductoPlaza) - int(request.GET['cantidad'])
-                    pplz.save()
-            messages.success(request, 'producto vendido')
-            return JsonResponse(
-                {
-                    'content':{
-                        'message':'Producto vendido'
+            id_producto = ProductosPlaza.objects.get(pk = request.GET['id_producto'])
+            if int(request.GET.get('cantidad')) > id_producto.cantidadProductoPlaza:
+                messages.error(request, 'la cantidad supera las existencias del producto {} por lo tanto no se pudo realizar la venta'.format(id_producto.id_producto.nombreproducto))
+                return JsonResponse(
+                    {
+                        'content':{
+                            'message':'Producto vendido'
+                        }
                     }
-                }
-            )
-        except AttributeError:
+                )
+            else:
+                venta = Ventas()
+                venta.valortotal = request.GET['total_producto']
+                venta.id_productoPlaza = ProductosPlaza.objects.get(pk = request.GET['id_producto'])
+                venta.save()
+                productosplaza = ProductosPlaza.objects.filter(pk = request.GET['id_producto'])
+                if productosplaza:
+                    for pplz in productosplaza:
+                        pplz.cantidadProductoPlaza = int(pplz.cantidadProductoPlaza) - int(request.GET['cantidad'])
+                        pplz.save()
+                messages.success(request, 'producto vendido')
+                return JsonResponse(
+                    {
+                        'content':{
+                            'message':'Producto vendido'
+                        }
+                    }
+                )
+        except :
             return notSession(request)
-
-     
-#funcion para abonar a pedido
 
 class PedidoAbono:
     def __init__(self):
@@ -82,7 +90,7 @@ class PedidoAbono:
             pedido = Pedidos.objects.filter(id_plaza=isEmpleado.id_plaza.id_plaza)
             print(isEmpleado.id_plaza.id_plaza)
             p = Plazas.objects.filter(pk = isEmpleado.id_plaza.id_plaza)
-            return render(request, 'plazaEmpleado/plazaPedidos.html', {'pedidos':pedido, 'p':p, 'status':status, 'tipoRol':isEmpleado})
+            return render(request, 'plazaEmpleado/plazaPedidos.html', {'pedidos':pedido, 'p':p, 'status':True, 'tipoRol':isEmpleado})
     
     #funcion para registrar pedido
     def registrarPedido(self, request):
@@ -105,6 +113,7 @@ class PedidoAbono:
                 price = float(request.POST.get('precio'))
                 pedidos.precio = price
                 pedidos.cantidadproducto = request.POST['cantidad']
+                pedidos.fEntrega = request.POST['fEntrega']
                 pedidos.save()
                 messages.success(request, 'Pedido registrado!')
             return redirect('pedidosList') 
@@ -120,6 +129,9 @@ class PedidoAbono:
             if request.GET.get('id_Edit'):
                 
                 status = True
+                u = Sessiones.objects.get(key_session = request.COOKIES['key_session'])
+                isEmpleado = Empleados.objects.get(id_usuario = u.id_usuario)
+
                 #datos del pedido
                 pedidos = Pedidos.objects.filter(pk=request.GET.get('id_Edit'))
                 #cancular abono 
@@ -132,7 +144,7 @@ class PedidoAbono:
                     self.precio = p.precio
                     self.faltante = p.precio - self.contador
                 
-                return render(request, 'plazaEmpleado/plazaPedidoAbonar.html', {'items':pedidos, 'total':self.contador, 'faltante':self.faltante, 'status':status})
+                return render(request, 'plazaEmpleado/plazaPedidoAbonar.html', {'items':pedidos, 'total':self.contador, 'faltante':self.faltante, 'status':True, 'tipoRol':isEmpleado})
             else:
                 try:
                     total = self.contador+float(request.GET['montoDelPedido'])

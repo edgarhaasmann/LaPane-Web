@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+
+{% block head %} Pedidos {% endblock%}
+
+{% block content %}
+
+    <div class="container">
+        <div class="row">
+            <div class="col">
+                <div class="row">
+                    <div class="col-lg-7">
+                        <h2 class="text">Pedidos hechos a las plaza</h2>
+                    </div>
+                    <div class="col">
+                        <div class="row">
+                            <div class="col-lg-9">
+                                <input type="text" class="col-lg-3 form-control inputBuscar" placeholder="Buscar por cliente o descripcion del pedido"> 
+                            </div>
+                            <div class="col">
+                                <button type="button" class="btn btn-success form-control btn-buscar" name="btn-buscar">Buscar</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <table class="table">
+                    <thead>
+                        <th class="text">Nombre del cliente</th>
+                        <th class="text">Descripcion</th>
+                        <th class="text">Plaza</th>
+                        <th class="text">Estado del pago</th>
+                        <th class="text">Fecha entrega</th>
+                        <th class="text">Opciones</th>
+                    </thead>
+                    <tbody class="tbody">
+                        <form method="get">
+                                {% for lp in ListPedidos %}
+                                <tr class="item">
+                                    <td class="text nombreCliente" id="{{lp.nombrecliente}}">{{lp.nombrecliente}}</td>
+                                    <td class="text descripcionPedido">{{lp.descripcionpedido}}</td>
+                                    <td class="text " id="nom{{lp.id_pedido}}">{{lp.id_plaza.nombre}}, {{lp.id_plaza.ubicacion}}</td>
+                                    <td class="estado" id="est{{lp.id_pedido}}">{% if lp.estadoPago == 1 %} <div class="text-success ">Pagado</div> {%else%} <div class="text-warning ">No pagado</div> {% endif %}</td>
+                                    <td class="text fentrega">{{lp.fEntrega}}</td>
+                                    <td><input type='text' name='idPedido' value='{{lp.id_pedido}}' hidden><button type="submit" class="btn btn-success form-control">Entregar</button></td>
+                                </tr>
+                                {% endfor %}
+
+                        </form>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+
+{% endblock %}

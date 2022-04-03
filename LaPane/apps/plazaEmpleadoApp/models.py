@@ -1,4 +1,5 @@
 from django.db import models
+from django.forms import model_to_dict
 from ..userApp.models import *
 from datetime import datetime
 
@@ -29,12 +30,15 @@ class Pedidos(models.Model):
     precio = models.DecimalField(max_digits=30, decimal_places=2)
     cantidadproducto = models.IntegerField(db_column='cantidadProducto')  # Field name made lowercase.
     estadoPago = models.BooleanField(default=False)
+    fEntrega = models.DateField(db_column='fentrega')
     id_plaza = models.ForeignKey(Plazas, models.DO_NOTHING, db_column='id_plaza', blank=True, null=True)
 
     class Meta:
         managed = True
         db_table = 'pedidos'
-
+    def toJson(self):
+        item = model_to_dict(self)
+        return item
 class Abonos(models.Model):
     id_abono = models.AutoField(primary_key=True)
     valorAbono = models.DecimalField(max_digits=30, decimal_places=2)

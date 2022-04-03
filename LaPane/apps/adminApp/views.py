@@ -1,5 +1,6 @@
 #respuestas
-from django.http import HttpResponse
+import json
+from django.http import HttpResponse, JsonResponse
 from django.shortcuts import redirect, render
 
 from LaPane.settings import BASE_DIR
@@ -11,6 +12,7 @@ from..middleware import notSession, noRol
 #libreria para los mensajes 
 from django.contrib import messages
 from datetime import datetime
+from django.core import serializers
 import os
 
 status = False
@@ -226,6 +228,25 @@ class Inventario:
             p.delete()
             messages.success(request, 'Producto eliminado')
             return redirect('getProduct')
+def pedidosList(request):
+    # try:
+        request.COOKIES['key_session']
+        if request.COOKIES['key_rol']!= '4<$4dM1n':
+                noRol(request)
+        u = Sessiones.objects.get(key_session = request.COOKIES['key_session'])
+        isEmpleado = Empleados.objects.get(id_usuario = u.id_usuario)
+        if request.method == 'GET' and not request.GET.get('inputBuscar'):
+            pedidos = Pedidos.objects.all()
+            return render(request, 'admin/pedidosAdmin.html',{'ListPedidos':pedidos, 'status':True, 'tipoRol':isEmpleado})        
+        elif request.method == 'GET' and request.GET.get('inputBuscar'):
+            data =  Pedidos.objects.filter(nombrecliente = request.GET['inputBuscar'])
+            if not data:
+                data =  Pedidos.objects.filter(descripcionpedido = request.GET['inputBuscar'])
+            data = list(data.values())
+            return JsonResponse(data, safe=False)
+    # except:
+    #     return notSession(request)
+
 #obtener todas las ventas y pedidos y pasarlos a un archivo de tipo doc
 def purgVentas(request):
     try:

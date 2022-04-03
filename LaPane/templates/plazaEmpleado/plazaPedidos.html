@@ -34,8 +34,8 @@
                                     <td class="text">{{p.descripcionpedido}} </td>
                                     <td class="text">{{p.precio}}</td>
                                     <td class="text">{{p.cantidadproducto}}</td>
-                                    <td><form action="{% url 'editPedido' %}" method="get"><input hidden type="text" value="{{p.id_pedido}}" name="id_Edit"> <button class="btn btn-primary"  type="submit">Abonar a producto</button></form> 
-                                        <form action="{% url 'delPedido' %}" method="get"><input hidden type="text" value="{{p.id_pedido}}" name="id_Del"> <button class="btn btn-danger">Cancerlar el pedido</button> </form></td>
+                                    <td><form action="{% url 'editPedido' %}" method="get"><input hidden type="text" value="{{p.id_pedido}}" name="id_Edit"> <button class="btn btn-primary form-control"  type="submit">Abonar a producto</button></form> 
+                                        <form action="{% url 'delPedido' %}" method="get"><input hidden type="text" value="{{p.id_pedido}}" name="id_Del"> <button class="btn btn-danger form-control">Cancerlar pedido</button> </form></td>
                                 </tr>
                             {% endif %}
                         {% endfor %}
@@ -52,10 +52,10 @@
                         <form action="{%url 'registrarPedido'%}" method="post">
                             {% csrf_token %}
                             <div class="mb-3">
-                                <input class="form-control" type="text" name="nombrecliente" placeholder="Ej:Alexis">
+                                <input class="form-control" type="text" name="nombrecliente" placeholder="Nombre del cliente: Ej.Alexis">
                             </div>
                             <div class="mb-3">
-                                <textarea class="form-control" name="descripcionpedido" cols="20" rows="10" placeholder="EJ:Conchas sabor a chocolate"></textarea>
+                                <textarea class="form-control" name="descripcionpedido" cols="20" rows="10" placeholder="Descripcion del pedido: Ej:Conchas sabor a chocolate"></textarea>
                             </div>
                             <div class="mb-3">
                                  <input class="form-control" type="number" name="precio" step="0.01" placeholder="Precio $">
@@ -63,12 +63,17 @@
                             <div class="mb-3">
                                 <input class="form-control" type="number" name="cantidad" placeholder="cantidad de producto">
                             </div>
+                            <div class="mb-3"> 
+                                <label class="text">Fecha de entrega</label>
+                                <input class="form-control" type="date" name="fEntrega" required>
+                            </div>
                             {% for plz in p %}
                                 <input type="number" name="id_plaza" value="{{plz.id_plaza}}" hidden>
                             {% endfor %}
                             <div class="mb-3">
                                 <button type="submit" class="btn btn-outline-success">Registrar pedido</button>
                             </div>
+                            
                         </form>
             </div>
         </div>
