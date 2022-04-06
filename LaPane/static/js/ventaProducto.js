@@ -25,9 +25,9 @@ $(document).ready(function(){
          const productoEnCanastaItem =  `
             <td hidden><input class='id' type='text' value='${itemIdProducto}' name='id_producto' ></td>
             <td hidden><input class='id_plaza' type='text' value='${idPlaza}' name='id_plaza' ></td>
-            <td><div class='nombreP'>${itemNombreProducto} </div></td>
+            <td><div class=' text nombreP'>${itemNombreProducto} </div></td>
             <td> <input  class='cantidadP' type='number' placeholder='Ingrese cantidad' name='cantidad' min='1' max='${parseInt(itemCantidadProducto)}'> </td>
-            <td> <input class='precioP' type='number' value='${itemPrecioProducto}' hidden> ${itemPrecioProducto} </div></td>
+            <td class='text'> <input class=' precioP' type='number' value='${itemPrecioProducto}' hidden> ${itemPrecioProducto} </div></td>
             <td><input type='button' class='btn btn-danger buttonDelete' value='x'></td>
             <td><input hidden type='text' id='Product${itemIdProducto}' class='totlp' > </td>
 

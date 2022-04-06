@@ -30,6 +30,9 @@ class Pedidos(models.Model):
     precio = models.DecimalField(max_digits=30, decimal_places=2)
     cantidadproducto = models.IntegerField(db_column='cantidadProducto')  # Field name made lowercase.
     estadoPago = models.BooleanField(default=False)
+    estadoPreparacion = models.BooleanField(default=False)
+    estadoPedido = models.BooleanField(default=False)
+    estadoEntrega = models.BooleanField(default=False)
     fEntrega = models.DateField(db_column='fentrega')
     id_plaza = models.ForeignKey(Plazas, models.DO_NOTHING, db_column='id_plaza', blank=True, null=True)
 

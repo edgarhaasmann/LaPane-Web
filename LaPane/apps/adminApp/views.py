@@ -235,15 +235,21 @@ def pedidosList(request):
                 noRol(request)
         u = Sessiones.objects.get(key_session = request.COOKIES['key_session'])
         isEmpleado = Empleados.objects.get(id_usuario = u.id_usuario)
-        if request.method == 'GET' and not request.GET.get('inputBuscar'):
+        if request.method == 'GET' and not request.GET.get('inputBuscar') and not request.GET.get('estado'):
             pedidos = Pedidos.objects.all()
             return render(request, 'admin/pedidosAdmin.html',{'ListPedidos':pedidos, 'status':True, 'tipoRol':isEmpleado})        
-        elif request.method == 'GET' and request.GET.get('inputBuscar'):
+        elif request.method == 'GET' and request.GET.get('inputBuscar') and not request.GET.get('estado'):
             data =  Pedidos.objects.filter(nombrecliente = request.GET['inputBuscar'])
             if not data:
                 data =  Pedidos.objects.filter(descripcionpedido = request.GET['inputBuscar'])
             data = list(data.values())
             return JsonResponse(data, safe=False)
+        elif request.method == 'GET' and request.GET.get('estado'):
+            pedido = Pedidos.objects.get(pk=request.GET['estado'])
+            pedido.estadoPreparacion=1
+            pedido.save()
+            messages.success(request, 'El pedido se puso disponible para la entrega para el cliente {}!'.format(pedido.nombrecliente))
+            return redirect('pedidosAdminList')
     # except:
     #     return notSession(request)
 

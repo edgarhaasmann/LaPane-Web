@@ -187,3 +187,28 @@ class PedidoAbono:
             messages.success(request, 'Pedido cancelado exitosamente!')
             return redirect('pedidosList')
             
+def pedidosListos(request):
+    # try:
+        request.COOKIES['key_session']
+        if request.COOKIES['key_rol']!= '#mpl$3Ad0':
+                noRol(request)
+        u = Sessiones.objects.get(key_session = request.COOKIES['key_session'])
+        isEmpleado = Empleados.objects.get(id_usuario = u.id_usuario)
+        if request.method=='GET' and not request.GET.get('estado') and not request.GET.get('inputBuscar'):
+            pedidos = Pedidos.objects.filter(id_plaza = isEmpleado.id_plaza)
+            return render(request, 'plazaEmpleado/pedidosListDisp.html',{'pedidos':pedidos, 'status':True, 'tipoRol':isEmpleado})
+        elif request.method=='GET' and request.GET.get('inputBuscar'):
+            data = Pedidos.objects.filter(nombrecliente = request.GET['inputBuscar'], id_plaza = isEmpleado.id_plaza)
+            if not data:
+                data = Pedidos.objects.filter(descripcionpedido = request.GET['inputBuscar'], id_plaza = isEmpleado.id_plaza)
+            data = list(data.values())
+            return JsonResponse(data, safe=False)
+        else:
+            pedido = Pedidos.objects.get(id_pedido=request.GET['estado'])
+            print(pedido.estadoEntrega)
+            pedido.estadoEntrega = 1
+            messages.success(request, 'Producto entregado al cliente {}'.format(pedido.nombrecliente))
+            pedido.save()
+            return redirect('pedidosPlazaList')
+    # except:
+    #     return notSession(request)

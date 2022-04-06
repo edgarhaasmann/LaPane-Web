@@ -35,6 +35,7 @@ urlpatterns = [
     path('ventas/registrarPedido', pedidos.registrarPedido, name='registrarPedido'),
     path('ventas/editPedido', pedidos.editPedido, name='editPedido'),
     path('ventas/delPedido', pedidos.delPedido, name='delPedido'),
+    path('ventas/pedidosListos', plazaview.pedidosListos, name='pedidosPlazaList'),
     # path('admin/', admin.site.urls),
 
 ] + static(settings.STATIC_URL, document_root = settings.STATIC_ROOT)

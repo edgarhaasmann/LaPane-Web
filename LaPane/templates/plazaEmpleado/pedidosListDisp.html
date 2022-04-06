@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+
+{% block head%} Pedidos Disponibles{% endblock%}
+
+{% block content %}
+    <div class="container">
+        <div class="row">
+            <div class="col">
+                <div class="col-lg-7">
+                    <h2 class="text">Pedidos disponibles para entrega</h2>
+                </div>
+                <div class="col">
+                    <div class="row">
+                        <div class="col-lg-9 col-mb-12 col-sm-12">
+                            <input type="search" class="col-lg-12 form-control inputBuscar2" placeholder="Buscar por cliente o descripcion del pedido"> 
+                        </div>
+                        <div class="col">
+                            <button type="button" class="btn btn-success form-control btn-buscarNPlaza" name="btn-buscar">Buscar</button>
+                        </div>
+                    </div>
+                </div>
+                <table class="table">
+                    <thead>
+                        <th class="text">Nombre del cliente</th>
+                        <th class="text">Descripción</th>
+                        <th class="text">Estado del pedido</th>
+                        <th class="text">Opciones</th>
+                    </thead>
+                    <tbody class="tbody">
+                        {% for p in pedidos %}
+                            {% if p.estadoPreparacion == True and p.estadoEntrega == False%}
+                                <td class="text">{{p.nombrecliente}}</td>
+                                <td class="text">{{p.descripcionpedido}}</td>
+                                <td class="text" id="disP{{p.id_pedido}}">{% if p.estadoPreparacion == True %} <div class="text-success"> Disponible </div> {% else %} <div class="text-warning"> No disponible </div>{% endif %} </td>
+                                <form method="get">
+                                    <td><input type='text' name='estado' value='{{p.id_pedido}}' hidden><button type="submit" class="btn btn-success form-control">Entregar</button></td>
+                                </form>
+                                
+                            {% endif %}
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+{% endblock %}
