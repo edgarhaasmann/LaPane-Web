@@ -41,9 +41,8 @@
                             <td class="estado" id="est{{lp.id_pedido}}">{% if lp.estadoPago == 1 %} <div class="text-success ">Pagado</div> {%else%} <div class="text-warning ">No pagado</div> {% endif %}</td>
                             <td class="text fentrega">{{lp.fEntrega}}</td>
                             <th class="text" id="estEn{{lp.id_pedido}}">{% if lp.estadoEntrega == 1 %} <div class="text-success ">Entregado</div> {%else%} <div class="text-warning ">No entregado</div> {% endif %}  </th>
-                            <form method="get">
-                                    <td><input type='text' name='estado' value='{{lp.id_pedido}}' hidden><button type="submit" class="btn btn-success form-control">Entregar</button></td>
-                            </form>
+                            <td><button type="button" onclick="entregarPedido('{{lp.id_pedido}}', '{{lp.nombrecliente}}')"class="btn btn-success form-control">Entregar</button></td>
+                            
                                 </tr>
                                 {% endfor %}
 

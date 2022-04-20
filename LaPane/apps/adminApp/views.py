@@ -229,7 +229,7 @@ class Inventario:
             messages.success(request, 'Producto eliminado')
             return redirect('getProduct')
 def pedidosList(request):
-    # try:
+    try:
         request.COOKIES['key_session']
         if request.COOKIES['key_rol']!= '4<$4dM1n':
                 noRol(request)
@@ -250,8 +250,8 @@ def pedidosList(request):
             pedido.save()
             messages.success(request, 'El pedido se puso disponible para la entrega para el cliente {}!'.format(pedido.nombrecliente))
             return redirect('pedidosAdminList')
-    # except:
-    #     return notSession(request)
+    except:
+        return notSession(request)
 
 #obtener todas las ventas y pedidos y pasarlos a un archivo de tipo doc
 def purgVentas(request):

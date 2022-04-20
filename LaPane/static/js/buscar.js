@@ -1,11 +1,18 @@
-function entregarPedido(i){
-    $.ajax({
-        url:'',
-        type:'GET',
-        data:{'estado':i}
-    })
+function entregarPedido(i, cli){
+    let ops = confirm(`Esta seguro de cambiar el estado del producto para el cliente ${cli}?`)
+    console.log(ops, i, cli);
+    if(ops== true){
+        $.ajax({
+            url:'',
+            type:'GET',
+            data:{'estado':i}
+        })
+    }else{
+        alert('No se realizaron cambios')
+    }
 } 
 
+//Funcion para pedido modulo admin
 $(document).ready(function(){
     $('.btn-buscar').on('click', function(){
         let inputBuscar = document.querySelector('.inputBuscar').value;
@@ -19,14 +26,19 @@ $(document).ready(function(){
                     console.log(res);
                     const tbody = document.querySelector('.tbody');
                     if(res.length>0){
+                        let content = ''
                         for(let r=0; r<res.length; r++){
+                            console.log('enctro primero', r);
+                            // for(c in res[r]){
+                            //     console.log('segundo', c[1]);
+                            // }
                             let nombre = $(`#nom${res[r].id_pedido}`).text(),
                                 estado = $(`#est${res[r].id_pedido}`).text(),
                                 estadoEn = $(`#estEn${res[r].id_pedido}`).text(),
                                 e = estado.split(' '),
                                 eEn = estadoEn.split(' ');
-        
-                            content = `
+                                console.log(e, eEn);
+                            content += `
                             <tr>
                                 <td class='text'>${res[r].nombrecliente}</td>
                                 <td class='text'>${res[r].descripcionpedido}</td>
@@ -38,8 +50,8 @@ $(document).ready(function(){
                             </tr>
                             
                             `
-                            tbody.innerHTML = content
                         }
+                        tbody.innerHTML = content
                     }else{
                         alert('No se encontraron coincidencias!')
                     }
@@ -54,7 +66,7 @@ $(document).ready(function(){
     });
     
 });
-
+//FUncion busqueda de pedidos en plaza
 $(document).ready(function(){
     $('.btn-buscarNPlaza').on('click', function(){
         const inputBuscar = document.querySelector('.inputBuscar2').value;
@@ -68,13 +80,15 @@ $(document).ready(function(){
                     const tbody = document.querySelector('.tbody');
                     if(res.length>0){
                         for(let r=0; r<res.length; r++){
+                            console.log(res[r].id_pedido , res[r].nombrecliente);
+                            let nombre = res[r].nombrecliente
                             let content = `
                             <tr>
                                 <td class='text'>${res[r].nombrecliente}</td>
                                 <td class='text'>${res[r].descripcionpedido}</td>
                                 <td class='${res[r].estadoPreparacion==true? 'text-success':'text-warning'}'>${res[r].estadoPreparacion==true? 'Diponible':'No disponible'}</td>
                                 <form action='' method="get">
-                                    <td ${res[r].estadoPreparacion == true?'':'hidden'} ><button onclick= entregarPedido(${res[r].id_pedido}) class="btn btn-success form-control">Entregar</button></td>
+                                    <td ${res[r].estadoPreparacion == true?'':'hidden'} ><button type='button' onclick= entregarPedido(${res[r].id_pedido}) class="btn btn-success form-control">Entregar</button></td>
                                 </form>
                             </tr>
                             `

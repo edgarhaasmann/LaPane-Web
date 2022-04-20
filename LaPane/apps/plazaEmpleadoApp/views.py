@@ -82,7 +82,6 @@ class PedidoAbono:
             return notSession(request)
         else:
             try:
-                status = True
                 u = Sessiones.objects.get(key_session = request.COOKIES['key_session'])
                 isEmpleado = Empleados.objects.get(id_usuario = u.id_usuario)
             except:
@@ -128,7 +127,6 @@ class PedidoAbono:
         else:
             if request.GET.get('id_Edit'):
                 
-                status = True
                 u = Sessiones.objects.get(key_session = request.COOKIES['key_session'])
                 isEmpleado = Empleados.objects.get(id_usuario = u.id_usuario)
 
@@ -188,7 +186,7 @@ class PedidoAbono:
             return redirect('pedidosList')
             
 def pedidosListos(request):
-    # try:
+    try:
         request.COOKIES['key_session']
         if request.COOKIES['key_rol']!= '#mpl$3Ad0':
                 noRol(request)
@@ -210,5 +208,5 @@ def pedidosListos(request):
             messages.success(request, 'Producto entregado al cliente {}'.format(pedido.nombrecliente))
             pedido.save()
             return redirect('pedidosPlazaList')
-    # except:
-    #     return notSession(request)
+    except:
+        return notSession(request)

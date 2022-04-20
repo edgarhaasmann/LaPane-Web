@@ -32,9 +32,8 @@
                                 <td class="text">{{p.nombrecliente}}</td>
                                 <td class="text">{{p.descripcionpedido}}</td>
                                 <td class="text" id="disP{{p.id_pedido}}">{% if p.estadoPreparacion == True %} <div class="text-success"> Disponible </div> {% else %} <div class="text-warning"> No disponible </div>{% endif %} </td>
-                                <form method="get">
-                                    <td><input type='text' name='estado' value='{{p.id_pedido}}' hidden><button type="submit" class="btn btn-success form-control">Entregar</button></td>
-                                </form>
+                                <td><button type="button" onclick="entregarPedido( '{{p.id_pedido}}', '{{p.nombrecliente}}')" class="btn btn-success form-control">Entregar</button></td>
+                       
                                 
                             {% endif %}
                         {% endfor %}
