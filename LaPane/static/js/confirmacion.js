@@ -9,5 +9,6 @@ $(document).on('click', '.btn-danger', function(){
     });
 });
 
+// confirmar registro 
 
 

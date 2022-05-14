@@ -1,5 +1,6 @@
 #respuestas
 import json
+from posixpath import split
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import redirect, render
 
@@ -272,30 +273,35 @@ def purgVentas(request):
         date = datetime.today().strftime('%Y-%m-%d')
         dir = os.path.join(BASE_DIR,'apps/adminApp/ventas')
         try:
-            ventas = open(f'{dir}/ventas_de_{date}.doc', 'w')
-            ventas.write('''Ventas plaza\n
-            \n'
+            if model:
+                totalVenta, totalPedido = 0 ,0
+                ventas = open(f'{dir}/ventas_de_{date}_.doc', 'w')
+                ventas.write('''Ventas plaza\n
+                \n
 
+                            ''')
+                for i in model:
+                    if i.id_productoPlaza!=None:
+                        cantidad = float(i.valortotal)//int(i.id_productoPlaza.id_producto.precio)
+                        ventas.write(f'''
+                        ----------------------------------------------------------------
+        |Nombre del producto: {i.id_productoPlaza.id_producto.nombreproducto} \n| Cantidad producto: {cantidad} \n|Total de venta: $ {i.valortotal} \n| Fecha venta: {i.fventa} \n 
+                        ----------------------------------------------------------------
                         ''')
-            for i in model:
-                if i.id_productoPlaza!=None:
-                    cantidad = float(i.valortotal)//int(i.id_productoPlaza.id_producto.precio)
-                    ventas.write(f'''
-                    ----------------------------------------------------------------
-    |Nombre del producto: {i.id_productoPlaza.id_producto.nombreproducto} \n| Cantidad producto: {cantidad} \n|Total de venta: $ {i.valortotal} \n| Fecha venta: {i.fventa} \n 
-                    ----------------------------------------------------------------
-                    ''')
-            ventas.write('''Productos personalizados ( Pedidos )\n
-                    ''')
-            for i in model:
-                if i.id_pedido!=None:
-                    ventas.write(f'''
-                    ----------------------------------------------------------------
-                    |Descripcion: {i.id_pedido.descripcionpedido} \n| Cantidad: {(i.id_pedido.cantidadproducto)}\n| Precio: ${i.id_pedido.precio}   \n | Fecha venta: {i.fventa} \n 
-                    ----------------------------------------------------------------
-                    ''')
-                
-            ventas.close()
+                        totalVenta = totalVenta + float(i.valortotal)
+                ventas.write(f'Total de ventas: {totalVenta}\n')
+                ventas.write('''Productos personalizados ( Pedidos )\n
+                        ''')
+                for i in model:
+                    if i.id_pedido!=None:
+                        ventas.write(f'''
+                        ----------------------------------------------------------------
+                        |Descripcion: {i.id_pedido.descripcionpedido} \n| Cantidad: {(i.id_pedido.cantidadproducto)}\n| Precio: ${i.id_pedido.precio}   \n | Fecha venta: {i.fventa} \n 
+                        ----------------------------------------------------------------
+                        ''')
+                        totalPedido = totalPedido + (float(i.id_pedido.cantidadproducto)* float(i.id_pedido.precio))
+                ventas.write(f'Total de ventas de pedidos {totalPedido}')
+                ventas.close()
         except:
             messages.error(request, 'El archivo se en cuentra en uso')
             return redirect('purga')
@@ -312,8 +318,9 @@ def purgVentas(request):
                     
                     response = HttpResponse(dir)
                     response['Content-Disposition'] = "attachment; filename=" + request.POST['archivo']
-                    Ventas.objects.all().delete()
-                    Pedidos.objects.filter(estadoPago = 1).delete()
+                    if request.POST['archivo'].split('_')[2] == date:
+                        Ventas.objects.all().delete()
+                        Pedidos.objects.filter(estadoPago = 1).delete()
                     return response
             elif request.POST.get('archivoDel'):
                 # os.remove(os.path.basename('apps/adminApp/ventas/{}').format(request.POST['archivoDel']))
